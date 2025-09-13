@@ -1,0 +1,10 @@
+The aim of project firebrand is to create a fully funtional website for Dom's Business: Hael's Jewelery.
+
+Features
+Piece Showcase on front page
+Store page
+About page
+
+Back end:
+order management
+price management
