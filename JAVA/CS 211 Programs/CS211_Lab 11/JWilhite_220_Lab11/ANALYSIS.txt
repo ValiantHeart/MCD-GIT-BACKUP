@@ -1,0 +1,13 @@
+1. WHICH IMPLEMENTATION (impl1 or impl2) IS FAULTY?
+
+	impl1's add and remove are incorrectly implemented. impl2 has an error in it's toString method.
+
+2. DESCRIBE WHY THE FAULTY IMPLEMENTATION IS BROKEN. IF A PARTICULAR
+METHOD IS BROKEN, NAME IT AND DESCRIBE SOME DETAILS OF WHAT CONDITIONS
+IT FAILS UNDER.
+
+	>>impl1:
+	X-add: impl1 does not like to handle items after a null has been added. impl2 is able to handle this.
+	X-remove: impl1 can't handle items being removed after a null or before a null. impl2 is able to handle this.
+	>>impl2:
+	X-toString: method includes nulls in return string (see test case combo_ALL)

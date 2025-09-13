@@ -1,0 +1,20 @@
+JUnit provides a series of assertion functions which check that the answers produced by methods produce the expected results. The most common of these are the following.
+
+assertTrue(code): Fail the test unless code evaluates to true
+assertFalse(code): Fail the test unless code evaluates to false
+assertEquals(expect, actual): Fail the test unless the statement expect.equals(actual) evaluates to true. By convention, the earlier argument is the result expected by the test while the later argument is the actual result produced by the test.
+
+
+>>impl1: 
+	X-stores default size as private static variable.
+	X-contains method does not check for null item condition.
+	X-Add method identical to impl2.
+	X-remove method effectively removes item and shifts contents over by one to the left.
+	X-toString method identical to impl2.
+	
+>>impl2:
+	X-assigns default size as int in constructor instead of storing it.
+	X-contains method checks for null item condition.
+	X-Add method identical to impl1.
+	X-remove method effectively replaces the object with a null indicator, doesn't shift contents over
+	X-toString method identical to impl1.

@@ -1,0 +1,54 @@
+public class Option<T>
+{
+ //fields:
+ private T option;
+ 
+ //constructors:
+ public Option()
+ {
+  this.option = null;
+ }
+ 
+ public Option(T item)
+ {
+  this.option = item;
+ }
+ 
+ //methods:
+ public boolean hasSome()
+ {
+  if((this.option).InstanceOf(NoneType))
+  {
+   return false;
+  }
+  else
+  {
+   return true;
+  }
+ }
+ 
+ public T getSome()
+ {
+  if((this.option).InstanceOf(NoneType))
+  {
+   throw new RuntimeException("Option has None");
+  }
+  
+  return this.option;
+ }
+ 
+ /*@Override*/public String toString()
+ {
+  String repr = "";
+  if(this.hasSome() == true)
+  {
+   repr += "Some(" + toString(this.option) + ")";
+   return repr;
+  }
+  else
+  {
+   repr += "None";
+   return repr;
+  }
+ }
+}

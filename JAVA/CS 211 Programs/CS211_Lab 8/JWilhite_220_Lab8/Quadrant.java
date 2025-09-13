@@ -1,0 +1,139 @@
+/*
+ **************************************************************************
+  Quadrant enumeration class for Lab 8 of CS211-220 (Spring 2017)
+  Coded by Jeffrey Wilhite 
+ **************************************************************************
+*/
+
+public enum Quadrant
+{ 
+	Q1 (true, true), 
+	Q2 (false, true), 
+	Q3 (false, false), 
+	Q4 (true, false);
+	// An enumeration which models the four quadrants of the 2D Cartesian
+	// plane.  It has exactly four elements: Q1, Q2, Q3, Q4.  It is likely
+	// that giving each some fields will make the implementation easier.
+	// A private constructor is also useful.
+	private boolean xpos;
+	private boolean ypos;
+	
+	//constructors:
+	private Quadrant (boolean x, boolean y) //Constructor type 0: (xpos and ypos bools)
+	{
+		xpos = x;
+		ypos = y;
+	}	
+
+	//methods:
+	public boolean xPositive() // true if x-coordinates are positive in the quadrant, false otherwise
+	{
+		return xpos;
+	}
+	
+	public boolean yPositive() // true if y-coordinates are positive in the quadrant, false otherwise
+	{
+		return ypos;
+	}
+	
+	public String signPair() //(COMPLETE)
+	{
+		String sign_Pair = "("; //starts the string off with the opening parenthesis
+		if (xpos == true) //if the xpos value is true:
+		{
+			sign_Pair += "+,"; //adds a plus and a comma to the string
+		}
+		else //if it's not true, it's false, thus:
+		{
+			sign_Pair += "-,"; //adds a minus and a comma to the string
+		}		
+		if (ypos == true) //if the ypos value is true:
+		{
+			sign_Pair += "+)"; //adds a plus and a closing parentheses to the string
+		}
+		else //if it's not true, it's false, thus:
+		{
+			sign_Pair += "-)"; //adds a minus and a closing parentheses to the string
+		}
+		return sign_Pair; //returns the assembled string.
+	}
+	// Return a String which represents the signs of the coordinates in
+	// the Quadrant as
+	//   (+,+) for Q1
+	//   (-,+) for Q2
+	//   (-,-) for Q3
+	//   (+,-) for Q4
+
+	public Quadrant flipX() //(COMPLETE)
+	{
+		if (xpos == true && ypos == true) //sign pair for Q1
+		{
+			return Q2; //returns Q2
+		}
+		if (xpos == false && ypos == true) //sign pair for Q2
+		{
+			return Q1; //returns Q1
+		}		
+		if (xpos == false && ypos == false) //sign pair for Q3
+		{
+			return Q4; //returns Q4
+		}
+		if (xpos == true && ypos == false) //sign pair for Q4
+		{
+			return Q3; //returns Q3
+		}
+		return Q1; //default return of Q!.
+	}
+	// Return the Quadrant that would result from flipping the sign (pos
+	// to neg or neg to pos) of the x-coordinate in this Quadrant..
+
+	public static Quadrant fromInts(int x, int y) //(COMPLETE)
+	{
+		if (x < 0 && y >= 0) //if x is neg and y is pos:
+		{
+			return Q2; //return Q2
+		}
+		if (x < 0 && y < 0) //if x is neg and y is neg:
+		{
+			return Q3; //return Q3
+		}
+		if (x >= 0 && y < 0) //if x is pos and y is neg:
+		{
+			return Q4; ////return Q4
+		}
+		return Q1; //default return is Q1
+	}
+	// Given two integers, determine return the quadrant in which they
+	// reside. If either x or y is 0, return one of the valid quadrants
+	// it might be assigned to (this case is not tested).
+
+	public static void main(String [] args) //(COMPLETE)
+	{
+		for (int i = 0; i < args.length; i++) //for each index in array args:
+		{
+			if (args.length < 2) //checks if the number of arguments provided is less than two:
+			{
+				break; //if so, break.
+			}
+			
+			if (i%2 != 0) //checks if the index is an odd number greater than 0:
+			{
+				String str_x = args[i - 1]; //grabs the string in the slot behind the current one and assigns it to str_x.
+				String str_y = args[i]; //grabs the string in the current slot and assigns it to str_y.
+				String coord_pair = "(" + str_x + "," + str_y + ")";
+				int x = Integer.parseInt(args[i - 1]); //convert the string in the slot behind the current one to an int named x.
+				int y = Integer.parseInt(args[i]); //convert the string in the the current slot to an int named y.
+				Quadrant quad = fromInts(x, y); //returns the quadrant from the pair of integers.
+				System.out.println(coord_pair + " has signs " + quad.signPair() + " and is in " + quad); //builds string repr of coord points for user
+			}
+		}
+		
+	}
+	// Accept an arbitrary number of command line arguments. Adjacent
+	// pairs of arguments are treated as (x,y) coordinates.  Print the
+	// quadrant in which the pair resides along with the signPair(). If
+	// an odd number of arguments is given, ignore the last
+	// argument. Any argument that cannot be converted to an integer
+	// should raise an exception on encountering it.
+
+}
