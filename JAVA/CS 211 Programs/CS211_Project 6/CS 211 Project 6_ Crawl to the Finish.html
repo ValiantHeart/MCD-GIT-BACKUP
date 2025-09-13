@@ -1,0 +1,2791 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0042)https://cs.gmu.edu/~kauffman/cs211/p6.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>CS 211 Project 6: Crawl to the Finish</title>
+<!-- 2017-04-24 Mon 11:47 -->
+
+<meta name="generator" content="Org-mode">
+<meta name="author" content="Mark Snyder and Chris Kauffman">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1">
+<style type="text/css">
+@media screen {
+html {
+font-family: serif;
+text-align: justify;
+}
+.src, .example {
+background-color: rgb(245,245,225); /*rgb(225,245,225)*/;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle { color: white; background-color: #006633; }
+/* Mason green section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid #006633;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: #006633;
+color: white;
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 570px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid #006633;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: #006633;
+color: white;
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2017-04-24 Mon 11:47</i>
+</div>
+<div id="content">
+<h1 class="title">CS 211 Project 6: Crawl to the Finish</h1>
+<ul class="org-ul">
+<li><b>Due: Sunday 5/7/2017 by 11:59 pm</b>
+</li>
+<li>Submit to  <a href="https://mymasonportal.gmu.edu/"><b>Blackboard</b></a>
+</li>
+</ul>
+
+<p>
+<b>CODE DISTRIBUTION</b>: 
+</p>
+<ul class="org-ul">
+<li>Provided code: <a href="https://cs.gmu.edu/~kauffman/cs211/p6pack.zip">p6pack.zip</a>
+</li>
+<li>Test files: <i>Not yet available</i> 
+</li>
+</ul>
+<p>
+<b>CHANGELOG:</b> 
+Empty
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-1">1. Overview</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-2">2. Project Files</a>
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-2-1">2.1. Add jsoup Library</a></li>
+</ul>
+</li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-3">3. Grading Breakdown</a>
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-3-1">3.1. Automated Tests (50%)</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-3-2">3.2. Manual Inspection (50%)</a></li>
+</ul>
+</li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-4">4. ArraySet: Track Unique Items with Sorting and Binary Search</a>
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-4-1">4.1. Implementation Notes</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-4-2">4.2. Manual Inspection Criteria for ArraySet (10%)</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-4-3">4.3. ArraySet Demo</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-4-4">4.4. ArraySet Architecture</a></li>
+</ul>
+</li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-5">5. Crawling Recursively and Iteratively</a>
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-5-1">5.1. Crawler Parent Class</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-5-2">5.2. Crawler Manual Inspection Criteria</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-5-3">5.3. Crawler Demonstration</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-5-4">5.4. Crawler Class Architecture</a></li>
+</ul>
+</li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-6">6. Parsing HTML Files with the Jsoup Library</a>
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-6-1">6.1. JsoupDemo Class</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-6-2">6.2. JsoupDemo File and Output Runs</a></li>
+</ul>
+</li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-7">7. RecursiveCrawler Child Class</a>
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-7-1">7.1. RecursiveCrawler Manual Inspection Criteria (10%)</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-7-2">7.2. RecursiveCrawler Demonstration</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-7-3">7.3. RecursiveCrawler Architecture</a></li>
+</ul>
+</li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-8">8. IterativeCrawler Child Class</a>
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-8-1">8.1. IterativeCrawler Manual Inspection Criteria (10%)</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-8-2">8.2. IterativeCrawler Demo</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-8-3">8.3. IterativeCrawler Architecture</a></li>
+</ul>
+</li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-9">9. Indexing Pages for Search</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-10">10. IndexEntry for Single Search Terms</a>
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-10-1">10.1. IndexEntry Manual Inspection Criteria (5%)</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-10-2">10.2. IndexEntry Helper Class Demo</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-10-3">10.3. IndexEntry Architecture</a></li>
+</ul>
+</li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-11">11. PageIndex for Sets of Search Terms</a>
+<ul>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-11-1">11.1. Adding Terms and Pages to a PageIndex</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-11-2">11.2. Queries with a PageIndex</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-11-3">11.3. PageIndex Manual Inspection Criteria (10%)</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-11-4">11.4. PageIndex Class Demo</a></li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-11-5">11.5. PageIndex Architecture</a></li>
+</ul>
+</li>
+<li><a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#sec-12">12. Setup and Submission (5%)</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Overview</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Modern web search engines involve two fundamental parts which will be
+the focus of this project.
+</p>
+<ul class="org-ul">
+<li><b>Web Crawlers</b> which start at a known web page and proceed to visit
+all pages linked to it, then visit all pages linked to those, and so
+forth. Crawlers build up a set of known pages based on this search
+process. Companies like Google and Microsoft are constantly running
+crawlers to discover new pages and update the terms associated with
+old pages.
+</li>
+<li>A <b>Page Index</b> which is a mapping of search terms like "pizza" to
+sites which contain or relate to the terms such as
+<code>https://www.papajohns.com</code> and <code>https://www.dominos.com</code>.  When a
+user visits a search engine web page like google.com and punches in
+a query, the index is used to quickly identify which pages contain
+the query terms so that results sets can be generated.
+</li>
+</ul>
+
+<p>
+Both of these processes involve the notion of <b>sets</b> of unique
+objects. A common method of maintaining sets is via a sorted array
+which will be implemented in the project's <code>ArraySet</code> class.
+</p>
+
+<p>
+This project implements two types of crawlers which move from page to page
+following links. These classes will parse actual HTML files with the
+help of a library called <b>jsoup</b>.
+</p>
+
+<p>
+The crawlers result in a set of found pages which can be used to
+create a page index that allows one to search for pages with a given
+term on it.
+</p>
+
+<p>
+To facilitate reproducibility and local development, the crawlers we
+build will <b>only visit locally stored files</b> rather than open network
+connections to real web sites.  This means your code can run when not
+connected to the internet and also that test cases can be written
+without worrying about the pages online changing.  The <code>crawls</code>
+directory contains some small-ish sites that have been downloaded and
+will serve as a basis for some testing.  
+</p>
+<div class="org-src-container">
+
+<pre class="src src-text">crawls/small-site/start.html
+crawls/white/index.html
+crawls/sean/index.html
+</pre>
+</div>
+<p>
+All three of these are usable web sites so that opening the given HTML
+pages in a web browser will allow one to manually crawl through the
+links on the pages.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Project Files</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The hierarchy of project classes is given below. 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-text">ArraySet : generic set of unique items backed by an array
+
+Crawler : abstract parent which leaves the crawl( ) method to children
+|
++--RecursiveCrawler extends Crawler : crawl through links using recursion
+|
++--IterativeCrawler extends Crawler : crawl through links without recursion
+|
++--MockCrawler extends Crawler      : (provided) doesn't actually crawl but can test other Crawler methods
+
+IndexEntry : Helper class for PageIndex, tracks a search term and pages on which it occurs
+PageIndex  : Indexes words on pages to allow searches
+Util       : Provided, gives filename conversion method and stop words list
+</pre>
+</div>
+
+<p>
+Files that are "provided" are in the project code pack.  Tests may be
+posted after the initial release of the project spec.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="left">
+
+<col class="left">
+
+<col class="left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">File</th>
+<th scope="col" class="left">State</th>
+<th scope="col" class="left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">ArraySet.java</td>
+<td class="left">create</td>
+<td class="left">Basic set of unique items backed by an array</td>
+</tr>
+
+<tr>
+<td class="left">Crawler.java</td>
+<td class="left">create</td>
+<td class="left">Abstract parent class of concrete crawlers</td>
+</tr>
+
+<tr>
+<td class="left">RecursiveCrawler.java</td>
+<td class="left">create</td>
+<td class="left">Visit linked pages via recursion</td>
+</tr>
+
+<tr>
+<td class="left">IterativeCrawler.java</td>
+<td class="left">create</td>
+<td class="left">Visit linked pages without recursion</td>
+</tr>
+
+<tr>
+<td class="left">IndexEntry.java</td>
+<td class="left">create</td>
+<td class="left">Track a word and the pages associated with it</td>
+</tr>
+
+<tr>
+<td class="left">PageIndex.java</td>
+<td class="left">create</td>
+<td class="left">Set of IndexEntries which can be created with a crawler and queried</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">MockCrawler</td>
+<td class="left">provided</td>
+<td class="left">Simple child class of Crawler to demonstrate/test its methods</td>
+</tr>
+
+<tr>
+<td class="left">JSoupDemo.java</td>
+<td class="left">provided</td>
+<td class="left">Demo class showing how to parse links and text using JSoup functions</td>
+</tr>
+
+<tr>
+<td class="left">Util.java</td>
+<td class="left">provided</td>
+<td class="left">Utility functions and stop words</td>
+</tr>
+
+<tr>
+<td class="left">crawls/</td>
+<td class="left">data</td>
+<td class="left">Directory containing crawled several web sites</td>
+</tr>
+
+<tr>
+<td class="left">crawls/small-site</td>
+<td class="left">data</td>
+<td class="left">Artificially small web site</td>
+</tr>
+
+<tr>
+<td class="left">crawls/white</td>
+<td class="left">data</td>
+<td class="left">Prof. White's home directory as local files (<a href="http://www.cs.gmu.edu/~white">http://www.cs.gmu.edu/~white</a>)</td>
+</tr>
+
+<tr>
+<td class="left">crawls/sean</td>
+<td class="left">data</td>
+<td class="left">Prof. Luke's home directory as local files (<a href="http://www.cs.gmu.edu/~sean">http://www.cs.gmu.edu/~sean</a>)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">jsoup.jar</td>
+<td class="left">provided</td>
+<td class="left">Library for HTML Parsing</td>
+</tr>
+
+<tr>
+<td class="left">junit-cs211.jar</td>
+<td class="left">provided</td>
+<td class="left">JUnit library for command line testing</td>
+</tr>
+
+<tr>
+<td class="left">ID.txt</td>
+<td class="left">create</td>
+<td class="left">Create in setup to identify yourself</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">Tests</td>
+<td class="left">tests</td>
+<td class="left">Will be posted later</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> <a id="add-jsoup" name="add-jsoup"></a> Add jsoup Library</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Part of this project involves using the provided <code>jsoup.jar</code> library
+to parse HTML files.  On the command line you will need to include
+this JAR file when compiling as follows:
+</p>
+
+<p>
+Unix
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">&gt; javac -cp jsoup.jar:. JsoupDemo.java
+&gt; java  -cp jsoup.jar:. JsoupDemo
+
+# When Testing
+&gt; javac -cp jsoup.jar:junit-cs211:. P6Tests.java
+&gt; java  -cp jsoup.jar:junit-cs211:. P6Tests
+</pre>
+</div>
+
+<p>
+Windows
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">&gt; javac -cp jsoup.jar;. JsoupDemo.java
+&gt; java  -cp jsoup.jar;. JsoupDemo
+
+# When Testing
+&gt; javac -cp jsoup.jar;junit-cs211;. P6Tests.java
+&gt; java  -cp jsoup.jar;junit-cs211;. P6Tests
+</pre>
+</div>
+
+<p>
+In DrJava, you will need to to add <code>jsoup.jar</code> to the classpath
+where DrJava looks for classes under the <code>Edit -&gt; Preferences</code> dialog.
+This will enable compilation of the <code>JsoupDemo.java</code> class and use of
+methods in the <code>jsoup</code> library for HTML parsing.
+</p>
+
+<p>
+Other IDEs should consult the documentation on how to add a JAR to
+their classpath.
+</p>
+
+<div class="center">
+
+<div class="figure">
+<p><img src="./CS 211 Project 6_ Crawl to the Finish_files/drjava-preferences-jsoup.png" alt="drjava-preferences-jsoup.png" max-width="100%">
+</p>
+<p><span class="figure-number">Figure 1:</span> Add <code>jsoup.jar</code> to the classpath to enable DrJava to use it in the interactive loop.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Grading Breakdown</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Grading for this project will be divided into two distinct parts:
+Automated tests, and Manual Inspection.
+</p>
+</div>
+
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Automated Tests (50%)&nbsp;&nbsp;&nbsp;<span class="tag"><span class="grading">grading</span></span></h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>JUnit test cases will be provided to detect errors in your code.
+</li>
+<li>Tests may not be available on initial release but will be posted at
+a later time.
+</li>
+<li>Tests may be expanded, changed, and corrected as the deadline
+approaches.
+</li>
+<li><b>It is your responsibility to get and use the freshest set of tests
+available.</b>
+</li>
+<li>Tests will be provided in source form so that you will know what
+tests are doing and where you are failing.  
+</li>
+<li>It is up to you to run the tests to determine whether you are
+passing or not.  If your code fails to compile against the tests,
+little to no credit will be garnered for this section.
+</li>
+<li>Most of the credit will be divide evenly among the tests; e.g. 50% /
+25 tests = 2% per test.  However, the teaching staff reserves the
+right to adjust the weight of test cases after the fact if deemed
+necessary.
+</li>
+<li>Code that does not compile and run tests according to the specified
+command line invocation may <b>lose all automated testing credit.</b>
+Graders will usually try to fix small compilation errors such as bad
+directory structures or improper use of packages. Such corrections
+typically result in a loss of 5-10% credit on automated
+testing. However, if more than a small amount of error to fix
+problems seems required, no credit will be given.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Manual Inspection (50%)</h3>
+<div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>Teaching staff (GTAs) will manually inspect your work looking for a
+specific set of features. They are generally listed throughout the
+document next to the relevant project features.
+</li>
+<li>Credit will also be awarded/deducted based on adherence to good
+coding style, which includes:
+<ul class="org-ul">
+<li>Good indentation and curly brace placement (be consistent and
+follow a common convention)
+</li>
+<li>Comments describing each field and method
+</li>
+<li>Comments describing a complex section of code and invariants which
+must be maintained for classes
+</li>
+<li>Use of internal private methods to decompose the problem beyond
+what is required in the spec, as needed
+</li>
+</ul>
+</li>
+<li>Some credit will be assigned for designing your program according
+to the given specification, for instance using a designated
+algorithm, structuring your program in a certain fashion, or
+utilizing a required programming element.
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> ArraySet: Track Unique Items with Sorting and Binary Search</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Many of the classes in this project require a <i>set of unique items</i> to
+be tracked such as the valid pages found or the terms in a search
+index. This common functionality is a good candidate for its own class
+which is provided by the <code>ArraySet</code> class.  While the <code>ArrayList</code>
+allows adding duplicate items and indexed set/get operations,
+<code>ArraySet</code> requires its contents to be unique. Items are either
+present or not in the set.  It provides a limited get facility which
+returns an equal item or <code>null</code> if no equal item is found. This will
+be useful later for altering items that are in the <code>ArraySet</code>.
+</p>
+
+<p>
+The <code>ArraySet</code> here is similar to the one featured in a recent lab
+with one notable exception: <b>ArraySet in this project maintains items
+in sorted order</b>.  This enables binary search to be used to determine
+if an item is already present in the set and to fulfill the contains
+and get methods.
+</p>
+</div>
+
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Implementation Notes</h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>This is a simple class and each method should be no longer than 10
+lines. The class can be made simple through the use of an internal
+<code>ArrayList</code> which will automatically manage the size of the backing
+array.  Many methods for <code>ArraySet</code> will translate to one-line calls
+to <code>ArrayList</code> method. 
+</li>
+<li>Importantly, the internal array of <code>ArraySet</code> must be maintained in
+sorted order. Make use of the <code>binarySearch</code> method in either the
+<code>Collections</code> class or the <code>Arrays</code> in the <code>contains(x)</code> and
+<code>get(x)</code> methods.
+</li>
+<li>When adding to the set using <code>add(x)</code> locate the position that a new
+item should exist at and shift elements to open up a space for it.
+Explore the existing <code>ArrayList</code> methods which make adding at an
+arbitrary position simple.
+</li>
+<li>One can use the library <code>binarySearch()</code> methods to determine where
+an item <i>would be</i> in an array if it is not
+present. <code>Collections.binarySearch(..)</code> and
+<code>Arrays.binarySearch(..)</code> return: 
+<ul class="org-ul">
+<li>A positive integer which is the position of a found item
+</li>
+<li>A negative integer which corresponds to the position where a
+search item would be if present.
+</li>
+</ul>
+<p>
+<b>Make use of binary search</b> in the <code>add()</code> method to quickly
+determine where a new item should be inserted.
+</p>
+</li>
+<li>The <code>ArraySet</code> has a strange looking type signature:
+<pre class="example">public class ArraySet&lt;T extends Comparable&lt;T&gt;&gt;
+</pre>
+<p>
+The presence of the <code>T extends Comparable&lt;T&gt;</code> portion indicates that
+the <code>ArraySet</code> can be used with any type that implements the
+<code>Comparable</code> interface on itself, and therefore has a
+<code>compareTo(..)</code> method.  You should not need to directly use
+<code>compareTo(..)</code> in your own code but the type signature ensures that
+calls to library functions like <code>binarySearch(..)</code> that need
+comparisons will have them available. <i>(Note: <code>Comparable</code> is used to provide the 'natural ordering', or single most obvious ordering of a type.)</i>
+</p>
+</li>
+<li>To access elements of the <code>ArraySet</code> in a <i>listy</i> fashion, it
+provides the <code>asList()</code> method which returns a list of its elements
+that can be accessed by index. This list can be a shallow reference
+to an internal field; it does not need to be a deep copy of the set.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Manual Inspection Criteria for ArraySet (10%)</h3>
+<div class="outline-text-3" id="text-4-2">
+<ul class="org-ul">
+<li>Generics are properly used.  There should be little to no need for
+warning suppression and if any is used, it is on account of generic
+array creation being used (not needed if using an internal
+ArrayList).
+</li>
+<li>Binary search is used in appropriate methods. The methods that can
+benefit from binary search are:
+<ul class="org-ul">
+<li><code>contain(x)</code>
+</li>
+<li><code>get(x)</code>
+</li>
+<li><code>add(x)</code> to determine the insertion position of a new item
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> ArraySet Demo</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="linenr"> 1: </span>Welcome to DrJava
+<span class="linenr"> 2: </span>&gt; ArraySet&lt;Integer&gt; as = new ArraySet&lt;Integer&gt;();
+<span class="linenr"> 3: </span>&gt; as.toString()                 // Initially empty
+<span class="linenr"> 4: </span>[]
+<span class="linenr"> 5: </span>&gt; as
+<span class="linenr"> 6: </span>[]
+<span class="linenr"> 7: </span>&gt; as.size()
+<span class="linenr"> 8: </span>0
+<span class="linenr"> 9: </span>&gt; as.add(7)                     // add(x) returns true on actually adding an element
+<span class="linenr">10: </span>true
+<span class="linenr">11: </span>&gt; as
+<span class="linenr">12: </span>[7]
+<span class="linenr">13: </span>&gt; as.add(2)
+<span class="linenr">14: </span>true
+<span class="linenr">15: </span>&gt; as.size()
+<span class="linenr">16: </span>2
+<span class="linenr">17: </span>&gt; as                            // new elements are added in sorted order
+<span class="linenr">18: </span>[2, 7]
+<span class="linenr">19: </span>&gt; as.add(5)
+<span class="linenr">20: </span>true
+<span class="linenr">21: </span>&gt; as
+<span class="linenr">22: </span>[2, 5, 7]
+<span class="linenr">23: </span>&gt; as.add(7)                     // add(x) returns false if the item is already present 
+<span class="linenr">24: </span>false
+<span class="linenr">25: </span>&gt; as                            // no changes are made if a duplicate add() is requested
+<span class="linenr">26: </span>[2, 5, 7]
+<span class="linenr">27: </span>&gt; as.add(9);
+<span class="linenr">28: </span>&gt; as.add(8);
+<span class="linenr">29: </span>&gt; as
+<span class="linenr">30: </span>[2, 5, 7, 8, 9]
+<span class="linenr">31: </span>&gt; as.size()
+<span class="linenr">32: </span>5
+<span class="linenr">33: </span>&gt; as.contains(5)                // contains(x) uses binary search internally 
+<span class="linenr">34: </span>true
+<span class="linenr">35: </span>&gt; as.contains(6)
+<span class="linenr">36: </span>false
+<span class="linenr">37: </span>&gt; as.get(8)                     // get(x) returns items that are equal to the query
+<span class="linenr">38: </span>8
+<span class="linenr">39: </span>&gt; as.get(6)                     // get(x) returns null if no items are equal
+<span class="linenr">40: </span>null
+<span class="linenr">41: </span>&gt; import java.util.List;
+<span class="linenr">42: </span>&gt; List&lt;Integer&gt; iList = as.asList(); // A list version of the set is accessible via asList()
+<span class="linenr">43: </span>&gt; iList
+<span class="linenr">44: </span>[2, 5, 7, 8, 9]
+<span class="linenr">45: </span>
+<span class="linenr">46: </span>&gt; ArraySet&lt;String&gt; bs = new ArraySet&lt;String&gt;();  // Generic: works with Strings as well
+<span class="linenr">47: </span>&gt; bs.add("R")
+<span class="linenr">48: </span>true
+<span class="linenr">49: </span>&gt; bs.add("R")                   // duplicate add(x) is ignored, returns false
+<span class="linenr">50: </span>false
+<span class="linenr">51: </span>&gt; bs
+<span class="linenr">52: </span>[R]  
+<span class="linenr">53: </span>&gt; bs.add("C");
+<span class="linenr">54: </span>&gt; bs.add("G");
+<span class="linenr">55: </span>&gt; bs.add("A");
+<span class="linenr">56: </span>&gt; bs.add("X");
+<span class="linenr">57: </span>&gt; bs
+<span class="linenr">58: </span>[A, C, G, R, X]
+<span class="linenr">59: </span>&gt; bs.contains("X")
+<span class="linenr">60: </span>true
+<span class="linenr">61: </span>&gt; bs.get("X")
+<span class="linenr">62: </span>X
+<span class="linenr">63: </span>&gt; bs.contains("T")
+<span class="linenr">64: </span>false
+<span class="linenr">65: </span>&gt; bs.get("T")
+<span class="linenr">66: </span>null
+<span class="linenr">67: </span>&gt; bs.size()
+<span class="linenr">68: </span>5
+<span class="linenr">69: </span>&gt; List&lt;String&gt; sList = bs.asList();
+<span class="linenr">70: </span>&gt; sList
+<span class="linenr">71: </span>[A, C, G, R, X]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> ArraySet Architecture</h3>
+<div class="outline-text-3" id="text-4-4">
+<pre class="example">public class ArraySet&lt;T extends Comparable&lt;T&gt;&gt;{
+// A simple implementation of a Set backed by an array.  As a Set,
+// instances track *unique* items so that no duplicates occur.  This
+// implementation should keep the underlying array sorted and use
+// binary search to quickly identify if items are present or absent to
+// maintain uniqueness.  To maintain this, items that go into the set
+// must implement the Comparable interface so that they have a
+// compareTo(..) method and are compatible with library search and
+// sort methods.
+// 
+// Good choices for private fields are an ArrayList which will manage
+// the underlying array size automatically.
+
+  public ArraySet();
+  // Create an empty ArraySet
+
+  public int size();
+  // Return the size of the set which is the number of unique items in
+  // it.
+
+  public List&lt;T&gt; asList();
+  // Return the contents of the set as a list. The return list does
+  // not have to be distinct from the lists pointed to by internal
+  // fields of the set (no deep copies need to be made).
+
+  public boolean contains(T query);
+  // Return true if the query item is present in the set and false
+  // otherwise. This method should use binary search to efficiently
+  // determine presence or absence.
+
+  public boolean add(T item);
+  // Ensure the specified item is present in the set.  Maintain the
+  // uniqueness of items in the set: do not add duplicates which
+  // would be equal to one another.  If the given item is added to
+  // the set, return true.  If the item is already present so that the
+  // set does not change size, return false.  Throw a RuntimeException
+  // in the event a item is null: ArraySet does not support null
+  // items.
+
+  public T get(T query);
+  // Retrieve an item in the set that is equal to the query item.  If
+  // no item in the set is equal to the query, return null.
+
+  public String toString();
+  // Return a string representation of the set and its contents. The
+  // string should be identical in format to Lists making use the
+  // toString() method of a List field the easiest way to implement
+  // this method. Examples:
+  //
+  // [1, 3, 5, 9, 20, 27]
+  // ["A", "B", "F", "R", "V"]
+
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Crawling Recursively and Iteratively</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+The first step in setting up any searchable web pages is simply to
+discover which pages exist. In the wild, this is done by programs called <i>web
+crawlers</i> or <i>spiders</i> which "crawl" across linked web pages. This
+process follows the general pattern of:
+</p>
+<ul class="org-ul">
+<li>Start on some known site or sites
+</li>
+<li>Parse the web page to locate links to other pages
+</li>
+<li>Visit the linked pages adding them to the known pages
+</li>
+<li>Parse any links on the new pages and visit them
+</li>
+<li>Repeat until all pages have been visited (fat chance), ISPs block
+your address (careful with that) or boredom ensues
+</li>
+</ul>
+
+<p>
+The nature of the search process lends itself well to recursive
+implementation so you will implement a <code>RecursiveCrawler</code> for the
+process above of visiting sites.  
+</p>
+
+<p>
+To emphasize the equivalence of recursion and iteration, you will also
+implement an <code>IterativeCrawler</code> which uses loops and internal data to
+accomplish the same task as its sibling <code>RecursiveCrawler</code>.  The
+actual code for crawling will be similar between the two with
+<code>IterativeCrawler</code> having the additional capability that it can add
+single pages whereas the <code>RecursiveCrawler</code> must complete an entire
+crawl from start to finish in a single method invocation.
+</p>
+</div>
+
+<div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> Crawler Parent Class</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Both the recursive and iterative crawlers share enough structure to
+merit a parent class. 
+</p>
+<ul class="org-ul">
+<li>Both will report an <code>ArraySet</code> of found pages after crawling
+</li>
+<li>Both will report an <code>ArraySet</code> of links/pages that are skipped
+</li>
+<li>Provide string versions of both of the above
+</li>
+<li>The actual act of crawling does not have a good default so is left
+as an abstract method
+<pre class="example">abstract public void crawl(String pageFileName);
+</pre>
+<p>
+which the two child classes will override.
+</p>
+</li>
+</ul>
+
+<p>
+The other functionality which the <code>Crawler</code> provides is the static
+method <code>validPageLink(page)</code> which indicates whether or not a given
+page should be crawled or skipped.
+</p>
+<ul class="org-ul">
+<li>Valid page links do not start with <code>http://</code>, <code>https://</code>, <code>file://</code>
+or <code>javascript:</code>. They are local file names like <code>A.html</code> and
+<code>subdir/D.html</code>
+</li>
+<li>Valid page links are to files ending with the <code>.html</code> or <code>.HTML</code>
+extension.  Other file types like <code>.jpg, .png, .jpeg</code> should
+generate a false return value which causes them to be skipped.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> Crawler Manual Inspection Criteria</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+There are no manual inspection criteria for <code>Crawler</code> itself but the
+two child classes <code>RecursiveCrawler</code> and <code>IterativeCrawler</code> have
+inspection criteria that relate to proper inheriting fields and
+methods from the parent class.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5-3" class="outline-3">
+<h3 id="sec-5-3"><span class="section-number-3">5.3</span> Crawler Demonstration</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+This demonstration uses the provided <code>MockCrawler</code> class which simply
+accepts found/skipped pages as constructor arguments and populates the
+appropriate fields with these. This is <b>not how other child classes</b>
+should work: <code>RecursiveCrawler</code> and <code>IterativeCrawler</code> should take no
+arguments in their constructors and only add to their found/skipped
+pages during invocations of their <code>crawl(page)</code> method.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="linenr"> 1: </span>Welcome to DrJava. 
+<span class="linenr"> 2: </span>// Constructor arguments for the provided MockCrawler
+<span class="linenr"> 3: </span>&gt; String [] found = {"start.html","A.html","B.html","C.html","subdir/D.html"}
+<span class="linenr"> 4: </span>&gt; String [] skipped = {"http://x.com/X.html","spider-man.png","javascript:alert('An alert');"}
+<span class="linenr"> 5: </span>&gt; Crawler c = new MockCrawler(found,skipped); // Create a MockCrawler
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span>// Demonstrate the basic methods of a Crawler: string returns
+<span class="linenr"> 8: </span>&gt; c.foundPagesString()
+<span class="linenr"> 9: </span>A.html
+<span class="linenr">10: </span>B.html
+<span class="linenr">11: </span>C.html
+<span class="linenr">12: </span>start.html
+<span class="linenr">13: </span>subdir/D.html
+<span class="linenr">14: </span>
+<span class="linenr">15: </span>&gt; c.skippedPagesString()
+<span class="linenr">16: </span>http://x.com/X.html
+<span class="linenr">17: </span>javascript:alert('An alert');
+<span class="linenr">18: </span>spider-man.png
+<span class="linenr">19: </span>
+<span class="linenr">20: </span>// List returns for found/skipped pages
+<span class="linenr">21: </span>&gt; import java.util.List;
+<span class="linenr">22: </span>&gt; List&lt;String&gt; fl = c.foundPagesList();
+<span class="linenr">23: </span>&gt; fl
+<span class="linenr">24: </span>[A.html, B.html, C.html, start.html, subdir/D.html]
+<span class="linenr">25: </span>&gt; List&lt;String&gt; sl = c.skippedPagesList();
+<span class="linenr">26: </span>&gt; sl
+<span class="linenr">27: </span>
+<span class="linenr">28: </span>// static validPageLink(page) method:
+<span class="linenr">29: </span>// Crawler considers local HTML pages to be "valid" - they should be
+<span class="linenr">30: </span>// visited during a web crawl
+<span class="linenr">31: </span>&gt; Crawler.validPageLink("A.html")
+<span class="linenr">32: </span>true
+<span class="linenr">33: </span>&gt; Crawler.validPageLink("subdir/D.html")
+<span class="linenr">34: </span>true
+<span class="linenr">35: </span>
+<span class="linenr">36: </span>// Non-local and non-HTML pages are not valid and should be skipped
+<span class="linenr">37: </span>// during a crawl
+<span class="linenr">38: </span>&gt; Crawler.validPageLink("http://some.site.com/A.html")
+<span class="linenr">39: </span>false
+<span class="linenr">40: </span>&gt; Crawler.validPageLink("javascript:ascript(arg);")
+<span class="linenr">41: </span>false
+<span class="linenr">42: </span>&gt; Crawler.validPageLink("adir/apic.jpg")
+<span class="linenr">43: </span>false
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5-4" class="outline-3">
+<h3 id="sec-5-4"><span class="section-number-3">5.4</span> Crawler Class Architecture</h3>
+<div class="outline-text-3" id="text-5-4">
+<pre class="example">public abstract class Crawler {
+// Abstract class to crawl linked pages. Descendent crawlers should
+// override the crawl(page) method to initiate a crawllestof linked
+// pages. The class is intended only to work for locally stored files
+// for whic validPageLink(page) should return true while non-local and
+// web links will return false. This class makes use of the ArraySet
+// class.
+
+  protected ArraySet&lt;String&gt; foundPages;
+  // Sets of pages that have been found or have been skipped due to
+  // their being invalid or non-existent.
+
+  protected ArraySet&lt;String&gt; skippedPages;
+
+  public Crawler();
+  // Public constructor that creates an empty crawler.
+
+  public abstract void crawl(String pageFileName);
+  // Initiate a crawl on the given page.  Child classes should
+  // override this.
+
+  public List&lt;String&gt; foundPagesList();
+  // Return the unique pages that have been found so far and are
+  // valid. Each item in the returned list should be unique and refer
+  // to a valid file that exists.
+
+  public List&lt;String&gt; skippedPagesList();
+  // Return the unique pages that have been skipped so far. These may
+  // be invalid as per validPageLink(..), non-existent files, or links
+  // off of the local file system.
+
+  public String foundPagesString();
+  // Return a string of pages that have been found so far.  Each page
+  // is shown on its own line terminated with a \n
+
+  public String skippedPagesString();
+  // Return a string of pages that have been found so far.  Each page
+  // is shown on its own line terminated with a \n
+
+  public static boolean validPageLink(String pageFileName);
+  // Return true if the given pageFileName is valid and false
+  // otherwise. Valid pages
+  //
+  // - Do not start with http://, https://, or file://
+  // - End with the extension .html or .HTML
+  //
+  // Any file not meeting the above criteria should generate a false
+  // return value.
+
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Parsing HTML Files with the Jsoup Library</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+A key component of this project is parsing HTML files to retrieve the
+links and words that are present in it.  This is no small task and
+<a href="https://blog.codinghorror.com/parsing-html-the-cthulhu-way/">many a CS student has succumbed to the dark horror that is parsing
+HTML with hand-rolled regular expressions</a>.  Instead, we will make use
+of a robust parsing library to quickly and easily do this job and
+allow focus to remain on the remaining application logic.
+</p>
+
+<p>
+The <a href="https://jsoup.org/">jsoup library</a> is an excellent choice for this as it provides a few
+key methods to extract links and body text from HTML pages.  The
+provided <code>jsoup.jar</code> file contains the library.  Core <code>Jsoup</code> class
+and constituent methods are described below. Remember to include jsoup
+during compilation by <a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#add-jsoup">adding it to the classpath of your
+compilation environment</a>.
+</p>
+</div>
+
+<div id="outline-container-sec-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> JsoupDemo Class</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+The provided file <code>JsoupDemo</code> shows how one can use the library to
+parse HTML files easily.  The key methods are as follows.
+</p>
+<ul class="org-ul">
+<li><code>Document doc = Jsoup.parse(input, "UTF-8");</code>
+
+<p>
+Create a parsed HTML document where <code>input</code> is a local file that
+exists.  
+</p>
+</li>
+
+<li><code>ArrayList&lt;Element&gt; links = doc.select("a[href]");</code>
+
+<p>
+From the document, return an <code>ArrayList</code> of <code>Elements</code> which are all
+links (<code>&lt;a href &gt;</code> tags) in the HTML page.
+</p>
+</li>
+
+<li><code>String linkedPage = element.attr("href")</code>
+
+<p>
+Extract the link from an HTML element representing a link.  This
+will be a string to a linked page.
+</p>
+</li>
+
+<li><code>String text = doc.body().text();</code>
+
+<p>
+Extract the text of the HTML page which removes all formatting,
+links, images, etc. and returns as a string.
+</p>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> JsoupDemo File and Output Runs</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+<b>The demo main method.</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="linenr"> 1: </span>// Copy these imports to enable JSoup to work
+<span class="linenr"> 2: </span>import org.jsoup.nodes.*;
+<span class="linenr"> 3: </span>import org.jsoup.*;
+<span class="linenr"> 4: </span>import org.jsoup.select.*;
+<span class="linenr"> 5: </span>import java.io.*;
+<span class="linenr"> 6: </span>import java.util.*;
+<span class="linenr"> 7: </span>
+<span class="linenr"> 8: </span>public class JsoupDemo{
+<span class="linenr"> 9: </span>  public static void main(String args[]) {
+<span class="linenr">10: </span>    try{
+<span class="linenr">11: </span>      // Select a file to parse, create a File from it
+<span class="linenr">12: </span>      File input = new File("crawls/small-site/start.html");
+<span class="linenr">13: </span>      // File input = new File(args[0]);
+<span class="linenr">14: </span>
+<span class="linenr">15: </span>      // Parse the HTML file using Jsoup, a Document results
+<span class="linenr">16: </span>      Document doc = Jsoup.parse(input, "UTF-8"); 
+<span class="linenr">17: </span>
+<span class="linenr">18: </span>      // Use the select(..) method to select all links (&lt;a href=.. &gt;
+<span class="linenr">19: </span>      // tags) in the HTML file.  It returns an ArrayList of Elements.
+<span class="linenr">20: </span>      ArrayList&lt;Element&gt; links = doc.select("a[href]");
+<span class="linenr">21: </span>      System.out.println("LINKS");
+<span class="linenr">22: </span>      for(Element element : links){
+<span class="linenr">23: </span>        String linkText = element.text();         // Extract the text in the link
+<span class="linenr">24: </span>        String linkedPage = element.attr("href"); // Extract the linked page
+<span class="linenr">25: </span>        System.out.printf("'%s'\n--&gt;%s\n\n",linkText,linkedPage);
+<span class="linenr">26: </span>      }
+<span class="linenr">27: </span>
+<span class="linenr">28: </span>      // Extract the text of the HTML page which removes all
+<span class="linenr">29: </span>      // formatting, links, images, etc. and returns as a string.
+<span class="linenr">30: </span>      String text = doc.body().text();
+<span class="linenr">31: </span>
+<span class="linenr">32: </span>      // Open up a scanner and scan through the body text using a
+<span class="linenr">33: </span>      // facncy delimeter to ignore punctuation and spaces.
+<span class="linenr">34: </span>      Scanner scan = new Scanner(text); //, "UTF-8");
+<span class="linenr">35: </span>      scan.useDelimiter("(\\p{Space}|\\p{Punct}|\\xA0)+");
+<span class="linenr">36: </span>      System.out.println("PAGE WORDS");
+<span class="linenr">37: </span>      while(scan.hasNext()){
+<span class="linenr">38: </span>        System.out.println(scan.next());
+<span class="linenr">39: </span>      }
+<span class="linenr">40: </span>    }
+<span class="linenr">41: </span>    catch(Exception e){
+<span class="linenr">42: </span>      System.out.printf("Could not parse %s\n",args[0]);
+<span class="linenr">43: </span>      return;
+<span class="linenr">44: </span>    }
+<span class="linenr">45: </span>
+<span class="linenr">46: </span>  }
+<span class="linenr">47: </span>}
+</pre>
+</div>
+
+<p>
+<b>A sample run</b> on the provided file <code>crawls/small-site/start.html</code>
+which is processed by default. The Unix command <code>cat</code> shows the
+contents of a file.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="linenr">  1: </span>&gt; cat crawls/small-site/start.html
+<span class="linenr">  2: </span>&lt;html&gt;
+<span class="linenr">  3: </span>  &lt;head&gt;&lt;title&gt;A small test site&lt;/title&gt; &lt;/head&gt;
+<span class="linenr">  4: </span>  &lt;body&gt;
+<span class="linenr">  5: </span>    &lt;p&gt;This is the starting page for the test site&lt;/p&gt;
+<span class="linenr">  6: </span>    &lt;p&gt;It contains some &lt;a href="A.html"&gt;links to other pages like
+<span class="linenr">  7: </span>      page A&lt;/a&gt; scattered in it.&lt;/p&gt;
+<span class="linenr">  8: </span>    &lt;ol&gt;
+<span class="linenr">  9: </span>      &lt;li&gt;&lt;a href="B.html"&gt;A link to page B&lt;/a&gt;&lt;/li&gt;
+<span class="linenr"> 10: </span>      &lt;li&gt;&lt;a href="C.html"&gt;A link to page C&lt;/a&gt;&lt;/li&gt;
+<span class="linenr"> 11: </span>      &lt;li&gt;&lt;a href="subdir/D.html"&gt;A link to page D in a
+<span class="linenr"> 12: </span>          subdirectory&lt;/a&gt;&lt;/li&gt;
+<span class="linenr"> 13: </span>    &lt;/ol&gt;
+<span class="linenr"> 14: </span>    
+<span class="linenr"> 15: </span>    &lt;p&gt; A link to &lt;a href="spider-man.png"&gt;original web crawler&lt;/a&gt;
+<span class="linenr"> 16: </span>      which should not be crawled.&lt;/p&gt;
+<span class="linenr"> 17: </span>
+<span class="linenr"> 18: </span>    &lt;p&gt; Finally, &lt;a href="A.html"&gt;here is another link to page A&lt;/a&gt;&lt;/p&gt;
+<span class="linenr"> 19: </span>  &lt;/body&gt;
+<span class="linenr"> 20: </span>&lt;/html&gt;
+<span class="linenr"> 21: </span>    
+<span class="linenr"> 22: </span>&gt; javac -cp jsoup.jar:. JsoupDemo.java
+<span class="linenr"> 23: </span>
+<span class="linenr"> 24: </span>&gt; java -cp jsoup.jar:. JsoupDemo
+<span class="linenr"> 25: </span>LINKS
+<span class="linenr"> 26: </span>'links to other pages like page A'
+<span class="linenr"> 27: </span>--&gt;A.html
+<span class="linenr"> 28: </span>
+<span class="linenr"> 29: </span>'A link to page B'
+<span class="linenr"> 30: </span>--&gt;B.html
+<span class="linenr"> 31: </span>
+<span class="linenr"> 32: </span>'A link to page C'
+<span class="linenr"> 33: </span>--&gt;C.html
+<span class="linenr"> 34: </span>
+<span class="linenr"> 35: </span>'A link to page D in a subdirectory'
+<span class="linenr"> 36: </span>--&gt;subdir/D.html
+<span class="linenr"> 37: </span>
+<span class="linenr"> 38: </span>'original web crawler'
+<span class="linenr"> 39: </span>--&gt;spider-man.png
+<span class="linenr"> 40: </span>
+<span class="linenr"> 41: </span>'here is another link to page A'
+<span class="linenr"> 42: </span>--&gt;A.html
+<span class="linenr"> 43: </span>
+<span class="linenr"> 44: </span>PAGE WORDS
+<span class="linenr"> 45: </span>This
+<span class="linenr"> 46: </span>is
+<span class="linenr"> 47: </span>the
+<span class="linenr"> 48: </span>starting
+<span class="linenr"> 49: </span>page
+<span class="linenr"> 50: </span>for
+<span class="linenr"> 51: </span>the
+<span class="linenr"> 52: </span>test
+<span class="linenr"> 53: </span>site
+<span class="linenr"> 54: </span>It
+<span class="linenr"> 55: </span>contains
+<span class="linenr"> 56: </span>some
+<span class="linenr"> 57: </span>links
+<span class="linenr"> 58: </span>to
+<span class="linenr"> 59: </span>other
+<span class="linenr"> 60: </span>pages
+<span class="linenr"> 61: </span>like
+<span class="linenr"> 62: </span>page
+<span class="linenr"> 63: </span>A
+<span class="linenr"> 64: </span>scattered
+<span class="linenr"> 65: </span>in
+<span class="linenr"> 66: </span>it
+<span class="linenr"> 67: </span>A
+<span class="linenr"> 68: </span>link
+<span class="linenr"> 69: </span>to
+<span class="linenr"> 70: </span>page
+<span class="linenr"> 71: </span>B
+<span class="linenr"> 72: </span>A
+<span class="linenr"> 73: </span>link
+<span class="linenr"> 74: </span>to
+<span class="linenr"> 75: </span>page
+<span class="linenr"> 76: </span>C
+<span class="linenr"> 77: </span>A
+<span class="linenr"> 78: </span>link
+<span class="linenr"> 79: </span>to
+<span class="linenr"> 80: </span>page
+<span class="linenr"> 81: </span>D
+<span class="linenr"> 82: </span>in
+<span class="linenr"> 83: </span>a
+<span class="linenr"> 84: </span>subdirectory
+<span class="linenr"> 85: </span>A
+<span class="linenr"> 86: </span>link
+<span class="linenr"> 87: </span>to
+<span class="linenr"> 88: </span>original
+<span class="linenr"> 89: </span>web
+<span class="linenr"> 90: </span>crawler
+<span class="linenr"> 91: </span>which
+<span class="linenr"> 92: </span>should
+<span class="linenr"> 93: </span>not
+<span class="linenr"> 94: </span>be
+<span class="linenr"> 95: </span>crawled
+<span class="linenr"> 96: </span>Finally
+<span class="linenr"> 97: </span>here
+<span class="linenr"> 98: </span>is
+<span class="linenr"> 99: </span>another
+<span class="linenr">100: </span>link
+<span class="linenr">101: </span>to
+<span class="linenr">102: </span>page
+<span class="linenr">103: </span>A
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> RecursiveCrawler Child Class</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+A concrete strategy to visit all pages linked in a collection is to
+recursively traverse the collection.  This is the core notion of a
+<i>graph traversal</i> and recursive implementations are almost always
+<a href="https://en.wikipedia.org/wiki/Depth-first_search">depth-first traversals</a>. It may be worth doing some reading on this
+subject to orient yourself on the subject though pseudocode is
+provided below.
+</p>
+
+<p>
+The heart of the <code>RecursiveCrawler</code> is its implementation of the
+<code>crawl(page)</code> method. The rough approach to this method is given in
+the following pseudocode.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text"><span class="linenr"> 1: </span>class RecursiveCrawler
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span>fields: FOUND    // set of found pages
+<span class="linenr"> 4: </span>        SKIPPED  // list of skipped pages
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span>METHOD crawl(PAGE){
+<span class="linenr"> 7: </span>  add PAGE to the FOUND pages
+<span class="linenr"> 8: </span>  create a jsoup DOCUMENT from PAGE
+<span class="linenr"> 9: </span>  extract a list of LINKS from the DOCUMENT
+<span class="linenr">10: </span>  for every ITEM in the LINKS {
+<span class="linenr">11: </span>    extract the LINKHREF from the ITEM
+<span class="linenr">12: </span>    if LINKHREF is not a valid page, add it to the SKIPPED pages
+<span class="linenr">13: </span>       and move on to the next item
+<span class="linenr">14: </span>    use the Util.relativeFileName(..) to get the LINKFILE
+<span class="linenr">15: </span>    if LINKFILE does not exist, add it to the SKIPPED pages
+<span class="linenr">16: </span>       and move on to the next item
+<span class="linenr">17: </span>    recursively visit LINKFILE as it is a valid page
+</pre>
+</div>
+
+<p>
+This process employs the function call stack to visit links on the way
+down the stack and continue the loop over linked <code>ITEMs</code> on a page
+on the way back up the stack.  By the end of this process, all valid
+HTML pages that can be reached will be in the <code>foundPages</code> field while
+any links found that are not valid pages will appear in the
+<code>skippedPages</code> field.
+</p>
+</div>
+
+<div id="outline-container-sec-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> RecursiveCrawler Manual Inspection Criteria (10%)&nbsp;&nbsp;&nbsp;<span class="tag"><span class="grading">grading</span></span></h3>
+<div class="outline-text-3" id="text-7-1">
+<ul class="org-ul">
+<li>Make use of recursion in the crawl() method or recursive helper
+methods associated with it; recursion is in the class name after
+all.
+</li>
+<li>The recursive process in crawl() should be reasonably easy to
+understand.  Use comments and clean code to indicate where links are
+being processed and to guide readers through the control flow of the
+method. 
+</li>
+<li>Make use of the jsoup library to do parsing by using its Document
+class and selection methods.
+</li>
+<li>Inherit as much as possible from the parent <code>Crawler</code> class. The
+class body can be as little as a constructor and the <code>crawl()</code>
+method. 
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-7-2" class="outline-3">
+<h3 id="sec-7-2"><span class="section-number-3">7.2</span> RecursiveCrawler Demonstration</h3>
+<div class="outline-text-3" id="text-7-2">
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="linenr"> 1: </span>Welcome to DrJava. Workding directory is: ~/ckauffm2-p6
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span>// Zero arg construct only, no pages initially found
+<span class="linenr"> 4: </span>&gt; Crawler c = new RecursiveCrawler()
+<span class="linenr"> 5: </span>&gt; c.foundPagesString()
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span>// Crawl starting at the given page and show results
+<span class="linenr"> 8: </span>&gt; c.crawl("crawls/small-site/start.html");
+<span class="linenr"> 9: </span>&gt; c.foundPagesString()
+<span class="linenr">10: </span>crawls/small-site/A.html
+<span class="linenr">11: </span>crawls/small-site/B.html
+<span class="linenr">12: </span>crawls/small-site/C.html
+<span class="linenr">13: </span>crawls/small-site/start.html
+<span class="linenr">14: </span>crawls/small-site/subdir/D.html
+<span class="linenr">15: </span>crawls/small-site/subdir/E.html
+<span class="linenr">16: </span>crawls/small-site/subdir/F.html
+<span class="linenr">17: </span>
+<span class="linenr">18: </span>&gt; c.skippedPagesString()
+<span class="linenr">19: </span>http://cs.gmu.edu
+<span class="linenr">20: </span>javascript:alert('An alert');
+<span class="linenr">21: </span>spider-man.png
+<span class="linenr">22: </span>
+<span class="linenr">23: </span>// Crawling another page addes to the found/skipped pages
+<span class="linenr">24: </span>&gt; c.crawl("crawls/white/index.html");
+<span class="linenr">25: </span>&gt; c.foundPagesString()
+<span class="linenr">26: </span>crawls/small-site/A.html
+<span class="linenr">27: </span>crawls/small-site/B.html
+<span class="linenr">28: </span>crawls/small-site/C.html
+<span class="linenr">29: </span>crawls/small-site/start.html
+<span class="linenr">30: </span>crawls/small-site/subdir/D.html
+<span class="linenr">31: </span>crawls/small-site/subdir/E.html
+<span class="linenr">32: </span>crawls/small-site/subdir/F.html
+<span class="linenr">33: </span>crawls/white/Pages/Syllabi/syllabus367F15.html
+<span class="linenr">34: </span>crawls/white/Pages/Syllabi/syllabus440S15.html
+<span class="linenr">35: </span>crawls/white/Pages/Syllabi/syllabus540F14.html
+<span class="linenr">36: </span>crawls/white/Pages/Syllabi/syllabus640S13.html
+<span class="linenr">37: </span>crawls/white/Pages/ci.html
+<span class="linenr">38: </span>crawls/white/Pages/cra.html
+<span class="linenr">39: </span>crawls/white/Pages/dis.html
+<span class="linenr">40: </span>crawls/white/Pages/dr.html
+<span class="linenr">41: </span>crawls/white/Pages/links.html
+<span class="linenr">42: </span>crawls/white/Pages/research.html
+<span class="linenr">43: </span>crawls/white/Pages/teaching.html
+<span class="linenr">44: </span>crawls/white/Pages/vyacc.html
+<span class="linenr">45: </span>crawls/white/Vyacc/dist.html
+<span class="linenr">46: </span>crawls/white/Vyacc/vyacc_readme.html
+<span class="linenr">47: </span>crawls/white/index.html
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-7-3" class="outline-3">
+<h3 id="sec-7-3"><span class="section-number-3">7.3</span> RecursiveCrawler Architecture</h3>
+<div class="outline-text-3" id="text-7-3">
+<pre class="example">public class RecursiveCrawler extends Crawler {
+// An implementation of a Crawler which uses recursion to chase links
+// and visit all files linked to the start point.
+
+  public RecursiveCrawler();
+  // Create an empty crawler
+
+  public void crawl(String pageFileName);
+  // Implementation of crawling.  Visit the given page wich should be
+  // valid.  Parse its contents using library functions in the JSoup
+  // library.  Examine all links on the page. Any valid page that
+  // exists and is unvisited should be visited recursively. By the
+  // time crawl(..)  finishes, all pages that can be reached from the
+  // start point should be returned by a call to the foundPagesXX()
+  // methods.
+  //
+  // See the spec for additional implementation details.
+
+  public static void main(String args[]) throws Exception;
+  // Optional main method for your own testing
+
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> IterativeCrawler Child Class</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+The <code>IterativeCrawler</code> is similar to the <code>RecursiveCrawler</code> in that it
+also overrides the <code>crawl</code> method to visit pages.  However, it adds
+some additional functionality that allows it to visit individual pages
+in a step-by-step fashion without moving on to links completely.  
+</p>
+<ul class="org-ul">
+<li>The class has field which is a list of <code>pendingPages</code> to visit with
+method calls.
+</li>
+<li><code>addPendingPage(page)</code> will add a page to be visited at a later time
+by the crawler.  It can be used independently to add pages for later
+or during other methods of <code>IterativeCrawler</code>.
+</li>
+<li><code>crawlNextPage()</code> visits a page that was added to the set of pending
+pages.  That page's pages are added to the <code>foundPages</code> for the
+crawler and any links on it are added either to the <code>pendingPages</code>
+or <code>skippedPages</code>.  The process of doing this is very similar to the
+pseudocode in <code>RecursiveCrawler</code> but replaces recursive calls with
+additions to <code>pendingPages</code>.
+
+<p>
+The next page to be crawled should be the last page in the
+<code>pendingPages</code> set. Use <code>asList()</code> method to get a list version of
+the set and <code>remove()</code> method of lists to accomplish this.
+</p>
+</li>
+<li><code>crawlRemaining()</code> will enter a loop of visiting pages until none
+remain in the <code>pendingPages</code>.  During execution, the <code>pendingPages</code>
+set grows and shrinks but should eventually reduce to size 0.
+</li>
+<li><code>crawl(page)</code> adds the given page to the <code>pendingPages</code> and calls
+<code>crawlRemainging()</code>.  
+</li>
+</ul>
+
+<p>
+Note that the <code>IterativeCrawler</code> should only put valid pages into its
+<code>pendingPages</code> which are those that are present and return true
+according to the <code>validPageLink(page)</code> method of <code>Crawler</code>.
+</p>
+</div>
+
+<div id="outline-container-sec-8-1" class="outline-3">
+<h3 id="sec-8-1"><span class="section-number-3">8.1</span> IterativeCrawler Manual Inspection Criteria (10%)&nbsp;&nbsp;&nbsp;<span class="tag"><span class="grading">grading</span></span></h3>
+<div class="outline-text-3" id="text-8-1">
+<ul class="org-ul">
+<li>Don't use any recursion: use loops only.
+</li>
+<li>Ensure that the <code>crawlNexPage()</code> method is clean and
+well-documented. It should not be much more complex than your
+recursive <code>crawl()</code> method specified elsewhere.
+</li>
+<li>Make use of an <code>ArraySet</code> field for the <code>pendingPages</code> to be visited. This
+will ensure that pending pages are never duplicated.
+</li>
+<li>Inherit as much as possible from the parent <code>Crawler</code> class. There
+is no need to redefine many methods and fields.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-8-2" class="outline-3">
+<h3 id="sec-8-2"><span class="section-number-3">8.2</span> IterativeCrawler Demo</h3>
+<div class="outline-text-3" id="text-8-2">
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="linenr">  1: </span>Welcome to DrJava. Workding directory is: ~/ckauffm2-p6
+<span class="linenr">  2: </span>// Iterative crawlers are created with no pending pages
+<span class="linenr">  3: </span>&gt; IterativeCrawler c = new IterativeCrawler();
+<span class="linenr">  4: </span>&gt; c.pendingPagesSize()
+<span class="linenr">  5: </span>0
+<span class="linenr">  6: </span>&gt; c.pendingPagesString()
+<span class="linenr">  7: </span>
+<span class="linenr">  8: </span>// A pending page can be added individually
+<span class="linenr">  9: </span>&gt; c.addPendingPage("crawls/small-site/start.html");
+<span class="linenr"> 10: </span>&gt; c.pendingPagesSize()
+<span class="linenr"> 11: </span>1
+<span class="linenr"> 12: </span>&gt; c.foundPagesString()
+<span class="linenr"> 13: </span>crawls/small-site/start.html
+<span class="linenr"> 14: </span>
+<span class="linenr"> 15: </span>// Crawling the next page causes that page to be found
+<span class="linenr"> 16: </span>&gt; c.crawlNextPage()
+<span class="linenr"> 17: </span>&gt; c.foundPagesString()
+<span class="linenr"> 18: </span>crawls/small-site/start.html
+<span class="linenr"> 19: </span>
+<span class="linenr"> 20: </span>// Any pages skipped are recorded
+<span class="linenr"> 21: </span>&gt; c.skippedPagesString()
+<span class="linenr"> 22: </span>spider-man.png
+<span class="linenr"> 23: </span>
+<span class="linenr"> 24: </span>// Additional valid pages are added to the pending pages
+<span class="linenr"> 25: </span>&gt; c.pendingPagesSize()
+<span class="linenr"> 26: </span>4
+<span class="linenr"> 27: </span>&gt; c.pendingPagesString()
+<span class="linenr"> 28: </span>crawls/small-site/A.html
+<span class="linenr"> 29: </span>crawls/small-site/B.html
+<span class="linenr"> 30: </span>crawls/small-site/C.html
+<span class="linenr"> 31: </span>crawls/small-site/subdir/D.html
+<span class="linenr"> 32: </span>
+<span class="linenr"> 33: </span>// Addition pages can be visited with repeated calls
+<span class="linenr"> 34: </span>&gt; c.crawlNextPage()   // Visit last page subdir/D.html
+<span class="linenr"> 35: </span>&gt; c.crawlNextPage()   // Visit last page subdir/F.html
+<span class="linenr"> 36: </span>&gt; c.foundPagesString()
+<span class="linenr"> 37: </span>crawls/small-site/start.html
+<span class="linenr"> 38: </span>crawls/small-site/subdir/D.html
+<span class="linenr"> 39: </span>crawls/small-site/subdir/E.html
+<span class="linenr"> 40: </span>
+<span class="linenr"> 41: </span>&gt; c.skippedPagesString()
+<span class="linenr"> 42: </span>spider-man.png
+<span class="linenr"> 43: </span>
+<span class="linenr"> 44: </span>&gt; c.pendingPagesString()
+<span class="linenr"> 45: </span>crawls/small-site/A.html
+<span class="linenr"> 46: </span>crawls/small-site/B.html
+<span class="linenr"> 47: </span>crawls/small-site/C.html
+<span class="linenr"> 48: </span>crawls/small-site/subdir/F.html
+<span class="linenr"> 49: </span>
+<span class="linenr"> 50: </span>&gt; c.crawlNextPage()
+<span class="linenr"> 51: </span>&gt; c.pendingPagesString()
+<span class="linenr"> 52: </span>crawls/small-site/A.html
+<span class="linenr"> 53: </span>crawls/small-site/B.html
+<span class="linenr"> 54: </span>crawls/small-site/C.html
+<span class="linenr"> 55: </span>
+<span class="linenr"> 56: </span>&gt; c.pendingPagesSize()
+<span class="linenr"> 57: </span>3
+<span class="linenr"> 58: </span>&gt; c.foundPagesString()
+<span class="linenr"> 59: </span>crawls/small-site/start.html
+<span class="linenr"> 60: </span>crawls/small-site/subdir/D.html
+<span class="linenr"> 61: </span>crawls/small-site/subdir/E.html
+<span class="linenr"> 62: </span>crawls/small-site/subdir/F.html
+<span class="linenr"> 63: </span>
+<span class="linenr"> 64: </span>&gt; c.skippedPagesString()
+<span class="linenr"> 65: </span>spider-man.png
+<span class="linenr"> 66: </span>
+<span class="linenr"> 67: </span>// Crawl all pending pages 
+<span class="linenr"> 68: </span>&gt; c.crawlRemaining()
+<span class="linenr"> 69: </span>&gt; c.foundPagesString()
+<span class="linenr"> 70: </span>crawls/small-site/A.html
+<span class="linenr"> 71: </span>crawls/small-site/B.html
+<span class="linenr"> 72: </span>crawls/small-site/C.html
+<span class="linenr"> 73: </span>crawls/small-site/start.html
+<span class="linenr"> 74: </span>crawls/small-site/subdir/D.html
+<span class="linenr"> 75: </span>crawls/small-site/subdir/E.html
+<span class="linenr"> 76: </span>crawls/small-site/subdir/F.html
+<span class="linenr"> 77: </span>
+<span class="linenr"> 78: </span>&gt; c.skippedPagesString()
+<span class="linenr"> 79: </span>http://cs.gmu.edu
+<span class="linenr"> 80: </span>javascript:alert('An alert');
+<span class="linenr"> 81: </span>spider-man.png
+<span class="linenr"> 82: </span>
+<span class="linenr"> 83: </span>&gt; c.pendingPagesSize()
+<span class="linenr"> 84: </span>0
+<span class="linenr"> 85: </span>&gt; c.pendingPagesString()
+<span class="linenr"> 86: </span>
+<span class="linenr"> 87: </span>
+<span class="linenr"> 88: </span>// A call to crawl automatically adds the given page to the pending
+<span class="linenr"> 89: </span>// list and invokes crawlRemaining()
+<span class="linenr"> 90: </span>&gt; c.crawl("crawls/white/index.html")
+<span class="linenr"> 91: </span>&gt; c.foundPagesString()
+<span class="linenr"> 92: </span>crawls/small-site/A.html
+<span class="linenr"> 93: </span>crawls/small-site/B.html
+<span class="linenr"> 94: </span>crawls/small-site/C.html
+<span class="linenr"> 95: </span>crawls/small-site/start.html
+<span class="linenr"> 96: </span>crawls/small-site/subdir/D.html
+<span class="linenr"> 97: </span>crawls/small-site/subdir/E.html
+<span class="linenr"> 98: </span>crawls/small-site/subdir/F.html
+<span class="linenr"> 99: </span>crawls/white/Pages/Syllabi/syllabus367F15.html
+<span class="linenr">100: </span>crawls/white/Pages/Syllabi/syllabus440S15.html
+<span class="linenr">101: </span>crawls/white/Pages/Syllabi/syllabus540F14.html
+<span class="linenr">102: </span>crawls/white/Pages/Syllabi/syllabus640S13.html
+<span class="linenr">103: </span>crawls/white/Pages/ci.html
+<span class="linenr">104: </span>crawls/white/Pages/cra.html
+<span class="linenr">105: </span>crawls/white/Pages/dis.html
+<span class="linenr">106: </span>crawls/white/Pages/dr.html
+<span class="linenr">107: </span>crawls/white/Pages/links.html
+<span class="linenr">108: </span>crawls/white/Pages/research.html
+<span class="linenr">109: </span>crawls/white/Pages/teaching.html
+<span class="linenr">110: </span>crawls/white/Pages/vyacc.html
+<span class="linenr">111: </span>crawls/white/Vyacc/dist.html
+<span class="linenr">112: </span>crawls/white/Vyacc/vyacc_readme.html
+<span class="linenr">113: </span>crawls/white/index.html
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-8-3" class="outline-3">
+<h3 id="sec-8-3"><span class="section-number-3">8.3</span> IterativeCrawler Architecture</h3>
+<div class="outline-text-3" id="text-8-3">
+<pre class="example">public class IterativeCrawler extends Crawler {
+// An implementation of a crawler which does not use recursion and
+// instead uses internal storage to track the pages that have yet to
+// be visited.
+
+  protected ArraySet&lt;String&gt; pendingPages;
+  // A list of pages that remain to be visited. As a single page is
+  // visited, any valid links that are found are added to this list to
+  // be visited later.  This list should only contain valid, existing
+  // pages which can be visited and have not yet been visited.
+
+  public IterativeCrawler();
+  // Create an empty crawler.
+
+  public void crawl(String pageFileName);
+  // Master crawl method which will start at the given page and visit
+  // all reachable pages.  This method should call the
+  // crawlRemaining() method as its last action.
+
+  public void crawlRemaining();
+  // Enter a loop that crawls individual pages until there are no
+  // pending pages remaining.
+
+  public void addPendingPage(String pageFileName);
+  // Add the given page to the list of of pending pages to be
+  // visited. It is assumed that that page is valid and exists so can
+  // be visited and parsed.
+
+  public int pendingPagesSize();
+  // Return the number of pages remaining to visit.
+
+  public String pendingPagesString();
+  // Return a string with each pending page to visit on its own line.
+
+  public void crawlNextPage();
+  // Crawl a single page which is retrieved and removed from the list
+  // of pending pages.  Parse the retrieved page's contents using
+  // library functions in the JSoup library.  Examine all links on the
+  // page. Any valid page that exists and is unvisited should be added
+  // to the pending list. By the time crawlNextPage() finishes, one
+  // additional page should be returned the foundPagesXX() methods
+  // while the pending pages list may have grown substantially.
+  //
+  // See the spec for additional implementation details.
+
+  public static void main(String args[]) throws Exception;
+  // Optional main method for your own testing
+
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> <a id="index-overview" name="index-overview"></a> Indexing Pages for Search</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+A <i>page index</i> is a data structure that allows one to quickly identify
+documents or web pages which contain search terms of interest.  Modern
+web search engines make extensive use of them to answer user queries
+with remarkable speed.  This speed is built on the fact that the index
+is created ahead of time and updated as crawls are continuously
+done. This is why very recent pages may not be indexed by search
+engines and be found via search until some time has passed and allowed
+web crawlers to find the new page.
+</p>
+
+<p>
+Our index will be simple: a set of individual terms (words) along with
+all pages which contain that term associated with it.
+</p>
+
+<p>
+A <code>PageIndex</code> "looks" roughly like:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-text">INDEX: 37 entries
+--------------------
+@ acrobat
+crawls/small-site/A.html
+crawls/small-site/subdir/E.html
+crawls/small-site/subdir/F.html
+@ alert
+crawls/small-site/B.html
+@ argyle
+crawls/small-site/A.html
+@ bored
+crawls/small-site/B.html
+@ bread
+crawls/small-site/A.html
+crawls/small-site/B.html
+crawls/small-site/C.html
+...
+@ test
+crawls/small-site/start.html
+@ web
+crawls/small-site/start.html
+</pre>
+</div>
+<p>
+where each line starting with <code>@</code> is a term and below it are pages on
+which the term occurs. Each of these is an instance of the
+<code>IndexEntry</code> class described next.  The <code>PageIndex</code> tracks a set of
+<code>IndexEntry</code> instances and allows the user call <code>query(terms)</code> to look
+up pages with terms of interest.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> IndexEntry for Single Search Terms</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+An individual entry in the index is comprised of a term along with the
+set of pages on which that term occurs. Examples:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-text">// Example 1:
+@ acrobat                            The search term 
+crawls/small-site/A.html             The pages on which it occurs
+crawls/small-site/subdir/E.html
+crawls/small-site/subdir/F.html
+
+// Example 2:
+@ dead                               The search term
+crawls/small-site/subdir/E.html      The pages on which it occurs
+</pre>
+</div>
+<p>
+This functionality is the responsibility of the <code>IndexEntry</code> class. 
+</p>
+</div>
+
+<div id="outline-container-sec-10-1" class="outline-3">
+<h3 id="sec-10-1"><span class="section-number-3">10.1</span> IndexEntry Manual Inspection Criteria (5%)&nbsp;&nbsp;&nbsp;<span class="tag"><span class="grading">grading</span></span></h3>
+<div class="outline-text-3" id="text-10-1">
+<ul class="org-ul">
+<li>Implement the <code>Comparable</code> interface to allow entries to be compared
+and put into <code>ArraySets</code>.
+</li>
+<li>Make use of an <code>ArraySet</code> of pages associated with the term to make
+most methods in this class extremely short. 
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-10-2" class="outline-3">
+<h3 id="sec-10-2"><span class="section-number-3">10.2</span> IndexEntry Helper Class Demo</h3>
+<div class="outline-text-3" id="text-10-2">
+<p>
+To track individual entries in the page index, instance of
+<code>IndexEntry</code> are used. This helps to break functionality into more
+manageable chunks.  
+</p>
+
+<p>
+Importantly, the <code>IndexEntry</code> class implements the <code>Comparable</code>
+interface allowing it to be used with the <code>ArraySet</code> class. Equality
+and comparisons of <code>IndexEntry</code> instance is based entirely on their
+term field which should be lowercased at construction.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="linenr"> 1: </span>// IndexEntry instances track a single term but initially have no
+<span class="linenr"> 2: </span>// pages associated with that term
+<span class="linenr"> 3: </span>&gt; IndexEntry javae = new IndexEntry("java");
+<span class="linenr"> 4: </span>&gt; javae
+<span class="linenr"> 5: </span>@ java
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span>&gt; javae.getPages()
+<span class="linenr"> 8: </span>[]
+<span class="linenr"> 9: </span>&gt; javae.containsPage("java.com")
+<span class="linenr">10: </span>false
+<span class="linenr">11: </span>
+<span class="linenr">12: </span>// Pages can be added to the entry
+<span class="linenr">13: </span>&gt; javae.addPage("java.com")
+<span class="linenr">14: </span>true
+<span class="linenr">15: </span>&gt; javae
+<span class="linenr">16: </span>@ java
+<span class="linenr">17: </span>java.com
+<span class="linenr">18: </span>&gt; javae.containsPage("java.com")
+<span class="linenr">19: </span>true
+<span class="linenr">20: </span>&gt; javae.addPage("java.com,some/file.html")
+<span class="linenr">21: </span>true
+<span class="linenr">22: </span>
+<span class="linenr">23: </span>// Redundant pages are ignored
+<span class="linenr">24: </span>&gt; javae.addPage("java.com,some/file.html")
+<span class="linenr">25: </span>false
+<span class="linenr">26: </span>&gt; javae.addPage("java.com,other/page.html")
+<span class="linenr">27: </span>true
+<span class="linenr">28: </span>&gt; javae
+<span class="linenr">29: </span>@ java
+<span class="linenr">30: </span>java.com
+<span class="linenr">31: </span>java.com,other/page.html
+<span class="linenr">32: </span>java.com,some/file.html
+<span class="linenr">33: </span>
+<span class="linenr">34: </span>&gt; javae.addPage("wikipedia.com/List_of_JVM_languages")
+<span class="linenr">35: </span>true
+<span class="linenr">36: </span>
+<span class="linenr">37: </span>// The term for the IndexEntry should be lowercased
+<span class="linenr">38: </span>&gt; IndexEntry clojuree = new IndexEntry("CLOJURE")
+<span class="linenr">39: </span>&gt; clojuree
+<span class="linenr">40: </span>@ clojure
+<span class="linenr">41: </span>
+<span class="linenr">42: </span>&gt; clojuree.addPage("wikipedia.com/List_of_JVM_languages")
+<span class="linenr">43: </span>true
+<span class="linenr">44: </span>
+<span class="linenr">45: </span>// IndexEntry implements the Comparable interface allowing it be used wherever a
+<span class="linenr">46: </span>// compareTo(..) method is required. 
+<span class="linenr">47: </span>&gt; javae.compareTo(clojuree)
+<span class="linenr">48: </span>7
+<span class="linenr">49: </span>&gt; clojuree.compareTo(clojuree)
+<span class="linenr">50: </span>0
+<span class="linenr">51: </span>&gt; clojuree.compareTo(javae)
+<span class="linenr">52: </span>-7
+<span class="linenr">53: </span>
+<span class="linenr">54: </span>// Being Comparable makes IndexEntry it compatible with ArraySet
+<span class="linenr">55: </span>&gt; ArraySet&lt;IndexEntry&gt; a = new ArraySet&lt;IndexEntry&gt;();
+<span class="linenr">56: </span>&gt; a.add(javae)
+<span class="linenr">57: </span>true
+<span class="linenr">58: </span>&gt; a.add(clojuree)
+<span class="linenr">59: </span>true
+<span class="linenr">60: </span>&gt; a
+<span class="linenr">61: </span>[@ clojure
+<span class="linenr">62: </span>wikipedia.com/List_of_JVM_languages
+<span class="linenr">63: </span>, @ java
+<span class="linenr">64: </span>java.com
+<span class="linenr">65: </span>java.com,other/page.html
+<span class="linenr">66: </span>java.com,some/file.html
+<span class="linenr">67: </span>wikipedia.com/List_of_JVM_languages
+<span class="linenr">68: </span>]
+<span class="linenr">69: </span>
+<span class="linenr">70: </span>// Equality and comparisons of IndexEntries are entirely based on their term
+<span class="linenr">71: </span>&gt; IndexEntry java2 = new IndexEntry("java")
+<span class="linenr">72: </span>&gt; java2
+<span class="linenr">73: </span>@ java
+<span class="linenr">74: </span>
+<span class="linenr">75: </span>&gt; javae
+<span class="linenr">76: </span>@ java
+<span class="linenr">77: </span>java.com
+<span class="linenr">78: </span>java.com,other/page.html
+<span class="linenr">79: </span>java.com,some/file.html
+<span class="linenr">80: </span>wikipedia.com/List_of_JVM_languages
+<span class="linenr">81: </span>
+<span class="linenr">82: </span>&gt; javae.equals(java2)
+<span class="linenr">83: </span>true
+<span class="linenr">84: </span>&gt; javae.compareTo(java2)
+<span class="linenr">85: </span>0
+<span class="linenr">86: </span>
+<span class="linenr">87: </span>// ArraySets do not add redundant equal elements
+<span class="linenr">88: </span>&gt; a.add(java2)
+<span class="linenr">89: </span>false
+<span class="linenr">90: </span>&gt; a
+<span class="linenr">91: </span>[@ clojure
+<span class="linenr">92: </span>wikipedia.com/List_of_JVM_languages
+<span class="linenr">93: </span>, @ java
+<span class="linenr">94: </span>java.com
+<span class="linenr">95: </span>java.com,other/page.html
+<span class="linenr">96: </span>java.com,some/file.html
+<span class="linenr">97: </span>wikipedia.com/List_of_JVM_languages
+<span class="linenr">98: </span>]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-10-3" class="outline-3">
+<h3 id="sec-10-3"><span class="section-number-3">10.3</span> IndexEntry Architecture</h3>
+<div class="outline-text-3" id="text-10-3">
+<p>
+This helper class offers basic functionality for tracking a single
+term for a <code>PageIndex</code>. 
+</p>
+<pre class="example">public class IndexEntry implements Comparable&lt;IndexEntry&gt;{
+// Entries in the PageIndex: Represents a single term (word) found and
+// tracks the pages that have that word associated with them.
+// IndexEntries are created by specificying a term in the constructor
+// and then adding pages to the entry.  The class implements
+// Comparable so it can be stored in a set such as ArraySet.
+
+  protected String term;
+  // A search term which is found on some pages. Examples: "computer"
+  // "acrobat" or "electronica".  Terms are kepty in lower case only.
+
+  protected ArraySet&lt;String&gt; pages;
+  // The set of pages which contain the given term
+
+  public IndexEntry(String term);
+  // Create an empty IndexEntry associated with the given term
+
+  public String getTerm();
+  // Return a the term associated associated with this entry
+
+  public List&lt;String&gt; getPages();
+  // Return a list of pages associated with this entry
+
+  public boolean containsPage(String pageFileName);
+  // Return true if the the given page is already present in this
+  // entry and false otherwise.
+
+  public boolean addPage(String filename);
+  // Add the given page to this entry returning true if it was not
+  // present and is therefore a new addition; return false if it is
+  // already present
+
+  public int compareTo(IndexEntry that);
+  // Compare the entry to that entry. The comparison is based entirely
+  // on the term field which should use the built-in String comparison
+  // methods to generate the difference.
+
+  public boolean equals(Object other);
+  // Return whether the other object is equal to this IndexEntry.
+  // This is only the case when other is also an IndexEntry and has an
+  // equal term field.
+
+  public String toString();
+  // Return a string representation of this entry. The format of the string is
+  //
+  // @ term
+  // file1
+  // file2
+  // file3
+  // ...
+  //
+  // Example 1: 1 page associated with "bored"
+  // @ bored
+  // crawls/small-site/B.html
+  // 
+  // Example 2: 6 pages associated with "lisp"
+  // @ lisp
+  // ../crawls/cs.gmu.edu/~sean/lisp/LispTutorial.html
+  // ../crawls/cs.gmu.edu/~sean/lisp/cons.html
+  // ../crawls/cs.gmu.edu/~sean/lisp/index.html
+  // ../crawls/cs.gmu.edu/~sean/papers/index.html
+  // ../crawls/cs.gmu.edu/~sean/research.1.html
+  // ../crawls/cs.gmu.edu/~sean/research/lil-gp-patch/index.html
+
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> PageIndex for Sets of Search Terms</h2>
+<div class="outline-text-2" id="text-11">
+<p>
+As mentioned in the <a href="https://cs.gmu.edu/~kauffman/cs211/p6.html#index-overview">overview of page indices</a>, a <code>PageIndex</code> is a set
+of search terms and associated pages. This is naturally implemented as
+an <code>ArraySet</code> of <code>IndexEntry</code> objects which is the primary field for
+<code>PageIndex</code>.  It can also make use of a <code>Crawler</code> to add the terms
+found on pages to the index.
+</p>
+</div>
+
+<div id="outline-container-sec-11-1" class="outline-3">
+<h3 id="sec-11-1"><span class="section-number-3">11.1</span> Adding Terms and Pages to a PageIndex</h3>
+<div class="outline-text-3" id="text-11-1">
+<p>
+While a <code>PageIndex</code> is created empty, it has methods to add terms and
+pages to the index.  The method
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java">public boolean addTermAndPage(String term, String page)
+</pre>
+</div>
+<p>
+is used to ensure that the give term is in the index and the given
+page is associated with it.
+</p>
+
+<p>
+If a term already exists and a new page is to be added to it, make use
+of the <code>get(entry)</code> method of <code>ArraySet</code> to retrieve the existing
+entry. For this you will need to create an empty <code>IndexEntry</code> with
+only the <code>term</code> associated with it in order to locate the existing
+entry in the set of entries. 
+</p>
+</div>
+
+<div id="outline-container-sec-11-1-1" class="outline-4">
+<h4 id="sec-11-1-1">Stop Words</h4>
+<div class="outline-text-4" id="text-11-1-1">
+<p>
+There are many words which may appear on pages which do not contribute
+much information and should be ignored. These are often referred to as
+<b>stop words</b>. A list of stop words appears in the <code>Util.STOP_WORDS</code>
+array in alphabetical order.  Whenever a term is considered for entry
+in the index, the <code>validTerm(term)</code> method should be invoked to
+check whether the term is present in <code>STOP_WORDS</code>.  If so, the <code>term</code>
+should be ignored and not added.  Since <code>STOP_WORDS</code> is in
+alphabetical order, binary search can be employed to speed up these
+checks.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-11-1-2" class="outline-4">
+<h4 id="sec-11-1-2">Adding Terms from a Crawler</h4>
+<div class="outline-text-4" id="text-11-1-2">
+<p>
+There is also an addition method that accepts a <code>Crawler</code> that has
+discovered some pages. 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java">public void addCrawledPages(Crawler crawler)
+</pre>
+</div>
+<p>
+The <code>PageIndex</code> makes use of its results to populate the index with
+terms and pages. Two important facts are at stake in this method.
+</p>
+<ul class="org-ul">
+<li>Use jsoup to extract the <i>body</i> text of the HTML pages with a call
+similar to
+<pre class="example">String text = doc.body().text();
+</pre>
+<p>
+This will produce a normal string without any tags or special
+formatting. 
+</p>
+</li>
+<li>Most text contains punctuation and spaces that should be ignored.
+<code>Scanner</code> can do this automatically by using the proper <i>delimiter</i>,
+the pattern used to separate words read by the scanner.  For
+consistency with tests, invoke the following method of <code>Scanner</code> to
+set the delimiter correctly.
+<pre class="example">scan.useDelimiter("(\\p{Space}|\\p{Punct}|\\xA0)+");
+</pre>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-11-2" class="outline-3">
+<h3 id="sec-11-2"><span class="section-number-3">11.2</span> Queries with a PageIndex</h3>
+<div class="outline-text-3" id="text-11-2">
+<p>
+The purpose of the <code>PageIndex</code> is to make pages searchable. For that,
+the <code>query(terms)</code> method is the main vehicle.  For convenience to
+users of the class, <code>query(terms)</code> accepts a space-separated string of
+search terms. <b>Only pages on which all query terms are present are
+returned.</b>  For example in the index
+</p>
+<div class="org-src-container">
+
+<pre class="src src-text">INDEX: 37 entries
+--------------------
+@ bread
+crawls/small-site/A.html
+crawls/small-site/B.html
+crawls/small-site/C.html
+...
+@ daring
+crawls/small-site/C.html
+crawls/small-site/subdir/D.html
+..
+@ directory
+crawls/small-site/subdir/D.html
+crawls/small-site/subdir/E.html
+...
+@ keywords
+crawls/small-site/A.html
+crawls/small-site/B.html
+crawls/small-site/C.html
+crawls/small-site/subdir/D.html
+crawls/small-site/subdir/E.html
+crawls/small-site/subdir/F.html
+...
+</pre>
+</div>
+<p>
+the following queries should result:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">&gt; index.query("directory")
+[crawls/small-site/subdir/D.html, 
+ crawls/small-site/subdir/E.html]
+
+&gt; index.query("keywords")
+[crawls/small-site/A.html,
+ crawls/small-site/B.html,
+ crawls/small-site/C.html,
+ crawls/small-site/subdir/D.html,
+ crawls/small-site/subdir/E.html,
+ crawls/small-site/subdir/F.html]
+
+&gt; index.query("directory keywords")
+[crawls/small-site/subdir/D.html,
+ crawls/small-site/subdir/E.html]
+
+&gt; index.query("start bread")
+[crawls/small-site/B.html]
+
+&gt; index.query("daring directory")
+[crawls/small-site/subdir/D.html]
+
+&gt; index.query("daring directory bread")
+[]
+</pre>
+</div>
+<p>
+Notice that in each case, each word in the query string is used to
+identify pages but the <b>intersection</b> (common pages) of these lists is
+ultimately returned if more than one query term is present.  This <a href="https://en.wikipedia.org/wiki/Intersection_(set_theory)">set
+intersection</a> process is an important part of the implementation of the
+page index.
+</p>
+
+<p>
+Efficiently determining the intersection of two sorted lists is the
+responsibility of the <code>intersectionOfSorted(x,y)</code> method.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java">public static List&lt;String&gt; intersectionOfSorted(List&lt;String&gt; x, List&lt;String&gt; y)
+</pre>
+</div>
+<p>
+The sorted lists will come from the <code>ArraySets</code> of pages stored in the
+index. This method should exploit this sorted order in the following
+way.
+</p>
+<ul class="org-ul">
+<li>Create an list of results
+</li>
+<li>Start at the beginning of both the <code>x</code> and <code>y</code> lists and iterate
+until the end of one or both lists is reached
+</li>
+<li>At each step, compare an <code>x</code> element and a <code>y</code> element
+</li>
+<li>If they are equal, they belong to the intersection so add them to
+the results
+</li>
+<li>If <code>x</code> is smaller than <code>y</code>'s element, move forward one element in
+the <code>x</code> list
+</li>
+<li>Otherwise move one forward in <code>y</code>'s list
+</li>
+</ul>
+<p>
+In this way, one can determine the common items in the intersection in
+a single pass.
+</p>
+
+<p>
+The <code>query(terms)</code> method itself can make repeated calls to
+<code>intersectionOfSorted(x,y)</code> to make the task of producing query
+results relatively simple and efficient.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-11-3" class="outline-3">
+<h3 id="sec-11-3"><span class="section-number-3">11.3</span> PageIndex Manual Inspection Criteria (10%)&nbsp;&nbsp;&nbsp;<span class="tag"><span class="grading">grading</span></span></h3>
+<div class="outline-text-3" id="text-11-3">
+<ul class="org-ul">
+<li>Make use of an <code>ArraySet</code> of <code>IndexEntries</code> to ease the task of
+tracking term/page associations.
+</li>
+<li>During the <code>validTerm(term)</code> method, employ binary search to speed
+up the check for <code>term</code> in the <code>Util.STOP_WORDS</code> array.
+</li>
+<li>Make use of the jsoup library and <code>Scanner</code> classes during
+<code>addCrawledPages(c)</code> to parse HTML documents and extract all terms
+associated with the page.
+</li>
+<li>During <code>intersectionOfSorted(x,y)</code>, make only a single pass through
+the <code>x</code> and <code>y</code> list arguments to construct the resulting
+intersection list.  Exploit the fact that both lists should be
+sorted as they come into the method.
+</li>
+<li>During <code>query(terms)</code>, make use of <code>intersectionOfSorted(x,y)</code> to
+build up the page list that contains all search terms.  
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-11-4" class="outline-3">
+<h3 id="sec-11-4"><span class="section-number-3">11.4</span> PageIndex Class Demo</h3>
+<div class="outline-text-3" id="text-11-4">
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="linenr">  1: </span>Welcome to DrJava. 
+<span class="linenr">  2: </span>
+<span class="linenr">  3: </span>// Indexes are created empty
+<span class="linenr">  4: </span>&gt; PageIndex index = new PageIndex();
+<span class="linenr">  5: </span>&gt; index.size()
+<span class="linenr">  6: </span>0
+<span class="linenr">  7: </span>&gt; index.toString()
+<span class="linenr">  8: </span>INDEX: 0 entries
+<span class="linenr">  9: </span>--------------------
+<span class="linenr"> 10: </span>
+<span class="linenr"> 11: </span>// Individual terms and pages can be added  individually
+<span class="linenr"> 12: </span>&gt; index.addTermAndPage("java","some/file.html");
+<span class="linenr"> 13: </span>true
+<span class="linenr"> 14: </span>&gt; index.addTermAndPage("c++","other/page.html");
+<span class="linenr"> 15: </span>true
+<span class="linenr"> 16: </span>&gt; index.addTermAndPage("java","third/site.html");
+<span class="linenr"> 17: </span>true
+<span class="linenr"> 18: </span>&gt; index.toString()
+<span class="linenr"> 19: </span>INDEX: 2 entries
+<span class="linenr"> 20: </span>--------------------
+<span class="linenr"> 21: </span>@ c++
+<span class="linenr"> 22: </span>other/page.html
+<span class="linenr"> 23: </span>@ java
+<span class="linenr"> 24: </span>some/file.html
+<span class="linenr"> 25: </span>third/site.html
+<span class="linenr"> 26: </span>
+<span class="linenr"> 27: </span>// Redundant adds do not change the index and return false
+<span class="linenr"> 28: </span>&gt; index.addTermAndPage("java","some/file.html")
+<span class="linenr"> 29: </span>false
+<span class="linenr"> 30: </span>&gt; index.size()
+<span class="linenr"> 31: </span>2
+<span class="linenr"> 32: </span>&gt; index.toString()
+<span class="linenr"> 33: </span>INDEX: 2 entries
+<span class="linenr"> 34: </span>--------------------
+<span class="linenr"> 35: </span>@ c++
+<span class="linenr"> 36: </span>other/page.html
+<span class="linenr"> 37: </span>@ java
+<span class="linenr"> 38: </span>some/file.html
+<span class="linenr"> 39: </span>third/site.html
+<span class="linenr"> 40: </span>
+<span class="linenr"> 41: </span>
+<span class="linenr"> 42: </span>&gt; index.validTerm("the")
+<span class="linenr"> 43: </span>false
+<span class="linenr"> 44: </span>&gt; index.validTerm("a")
+<span class="linenr"> 45: </span>false
+<span class="linenr"> 46: </span>&gt; index.addTermAndPage("JAVA","some/page.html")
+<span class="linenr"> 47: </span>false
+<span class="linenr"> 48: </span>&gt; index.addTermAndPage("Java","some/page.html")
+<span class="linenr"> 49: </span>false
+<span class="linenr"> 50: </span>&gt; index
+<span class="linenr"> 51: </span>INDEX: 3 entries
+<span class="linenr"> 52: </span>--------------------
+<span class="linenr"> 53: </span>@ c++
+<span class="linenr"> 54: </span>other/page.html
+<span class="linenr"> 55: </span>@ clojure
+<span class="linenr"> 56: </span>clojure.com
+<span class="linenr"> 57: </span>@ java
+<span class="linenr"> 58: </span>clojure.com
+<span class="linenr"> 59: </span>some/file.html
+<span class="linenr"> 60: </span>some/page.html
+<span class="linenr"> 61: </span>third/site.html
+<span class="linenr"> 62: </span>
+<span class="linenr"> 63: </span>// Capitilzation does not matter: all terms should be lowercased
+<span class="linenr"> 64: </span>&gt; index.addTermAndPage("CLOJURE","wikipedia.com/List_of_JVM_languages")
+<span class="linenr"> 65: </span>true
+<span class="linenr"> 66: </span>&gt; index
+<span class="linenr"> 67: </span>INDEX: 3 entries
+<span class="linenr"> 68: </span>--------------------
+<span class="linenr"> 69: </span>@ c++
+<span class="linenr"> 70: </span>other/page.html
+<span class="linenr"> 71: </span>@ clojure
+<span class="linenr"> 72: </span>clojure.com
+<span class="linenr"> 73: </span>wikipedia.com/List_of_JVM_languages
+<span class="linenr"> 74: </span>@ java
+<span class="linenr"> 75: </span>clojure.com
+<span class="linenr"> 76: </span>some/file.html
+<span class="linenr"> 77: </span>some/page.html
+<span class="linenr"> 78: </span>third/site.html
+<span class="linenr"> 79: </span>
+<span class="linenr"> 80: </span>// Case should not matter in contains either
+<span class="linenr"> 81: </span>&gt; index.containsTerm("java")
+<span class="linenr"> 82: </span>true
+<span class="linenr"> 83: </span>&gt; index.containsTerm("JAVA")
+<span class="linenr"> 84: </span>true
+<span class="linenr"> 85: </span>&gt; index.containsTerm("Java")
+<span class="linenr"> 86: </span>true
+<span class="linenr"> 87: </span>&gt; index.containsTerm("JaVa")
+<span class="linenr"> 88: </span>true
+<span class="linenr"> 89: </span>
+<span class="linenr"> 90: </span>&gt; index.query("java");
+<span class="linenr"> 91: </span>[some/file.html, third/site.html]
+<span class="linenr"> 92: </span>&gt; index.query("c++");
+<span class="linenr"> 93: </span>[other/page.html]
+<span class="linenr"> 94: </span>&gt; index.query("clojure")
+<span class="linenr"> 95: </span>[]
+<span class="linenr"> 96: </span>&gt; index.addTermAndPage("clojure","clojure.com");
+<span class="linenr"> 97: </span>true
+<span class="linenr"> 98: </span>&gt; index.addTermAndPage("java","clojure.com");
+<span class="linenr"> 99: </span>true
+<span class="linenr">100: </span>&gt; index.query("clojure")
+<span class="linenr">101: </span>[clojure.com]
+<span class="linenr">102: </span>&gt; index.query("java")
+<span class="linenr">103: </span>[clojure.com, some/file.html, third/site.html]
+<span class="linenr">104: </span>&gt; index.query("java clojure")
+<span class="linenr">105: </span>[clojure.com]
+<span class="linenr">106: </span>&gt; index.query("JAVA clojure")
+<span class="linenr">107: </span>[clojure.com]
+<span class="linenr">108: </span>
+<span class="linenr">109: </span>// The list of words in Util.STOP_WORDS are largely uninformative and
+<span class="linenr">110: </span>// should never be added as index terms; method validTerm(..)
+<span class="linenr">111: </span>// determines this
+<span class="linenr">112: </span>
+<span class="linenr">113: </span>&gt; index.validTerm("hola")
+<span class="linenr">114: </span>true
+<span class="linenr">115: </span>&gt; index.validTerm("java")
+<span class="linenr">116: </span>true
+<span class="linenr">117: </span>
+<span class="linenr">118: </span>// Not valid terms
+<span class="linenr">119: </span>&gt; index.validTerm("the")
+<span class="linenr">120: </span>false
+<span class="linenr">121: </span>&gt; index.validTerm("hello")
+<span class="linenr">122: </span>false
+<span class="linenr">123: </span>
+<span class="linenr">124: </span>// Invalid term does not change the index
+<span class="linenr">125: </span>&gt; index.addTermAndPage("hello","not/added.html")
+<span class="linenr">126: </span>false
+<span class="linenr">127: </span>&gt; index
+<span class="linenr">128: </span>INDEX: 3 entries
+<span class="linenr">129: </span>--------------------
+<span class="linenr">130: </span>@ c++
+<span class="linenr">131: </span>other/page.html
+<span class="linenr">132: </span>@ clojure
+<span class="linenr">133: </span>clojure.com
+<span class="linenr">134: </span>wikipedia.com/List_of_JVM_languages
+<span class="linenr">135: </span>@ java
+<span class="linenr">136: </span>clojure.com
+<span class="linenr">137: </span>some/file.html
+<span class="linenr">138: </span>some/page.html
+<span class="linenr">139: </span>third/site.html
+<span class="linenr">140: </span>
+<span class="linenr">141: </span>
+<span class="linenr">142: </span>// Reset the index and add pages that result from crawling
+<span class="linenr">143: </span>&gt; PageIndex index = new PageIndex();
+<span class="linenr">144: </span>&gt; index.size()
+<span class="linenr">145: </span>0
+<span class="linenr">146: </span>&gt; Crawler c = new RecursiveCrawler();
+<span class="linenr">147: </span>&gt; c.crawl("crawls/small-site/start.html");
+<span class="linenr">148: </span>&gt; index.addCrawledPages(c)
+<span class="linenr">149: </span>&gt; index.size()
+<span class="linenr">150: </span>37
+<span class="linenr">151: </span>
+<span class="linenr">152: </span>// Contains term returns true/false on whether any pages are associated with the term
+<span class="linenr">153: </span>&gt; index.containsTerm("champagne")
+<span class="linenr">154: </span>true
+<span class="linenr">155: </span>&gt; index.query("directory")
+<span class="linenr">156: </span>[crawls/small-site/subdir/D.html, crawls/small-site/subdir/E.html]
+<span class="linenr">157: </span>&gt; index.query("keywords")
+<span class="linenr">158: </span>[crawls/small-site/A.html, crawls/small-site/B.html, crawls/small-site/C.html, crawls/small-site/subdir/D.html, crawls/small-site/subdir/E.html, crawls/small-site/subdir/F.html]
+<span class="linenr">159: </span>&gt; index.query("directory keywords")
+<span class="linenr">160: </span>[crawls/small-site/subdir/D.html, crawls/small-site/subdir/E.html]
+<span class="linenr">161: </span>&gt; index.query("daring directory")
+<span class="linenr">162: </span>[crawls/small-site/subdir/D.html]
+<span class="linenr">163: </span>&gt; index.toString()
+<span class="linenr">164: </span>INDEX: 37 entries
+<span class="linenr">165: </span>--------------------
+<span class="linenr">166: </span>@ acrobat
+<span class="linenr">167: </span>crawls/small-site/A.html
+<span class="linenr">168: </span>crawls/small-site/subdir/E.html
+<span class="linenr">169: </span>crawls/small-site/subdir/F.html
+<span class="linenr">170: </span>@ alert
+<span class="linenr">171: </span>crawls/small-site/B.html
+<span class="linenr">172: </span>@ argyle
+<span class="linenr">173: </span>crawls/small-site/A.html
+<span class="linenr">174: </span>@ bored
+<span class="linenr">175: </span>crawls/small-site/B.html
+<span class="linenr">176: </span>@ bread
+<span class="linenr">177: </span>crawls/small-site/A.html
+<span class="linenr">178: </span>crawls/small-site/B.html
+<span class="linenr">179: </span>crawls/small-site/C.html
+<span class="linenr">180: </span>@ champagne
+<span class="linenr">181: </span>crawls/small-site/C.html
+<span class="linenr">182: </span>crawls/small-site/subdir/D.html
+<span class="linenr">183: </span>@ cheese
+<span class="linenr">184: </span>crawls/small-site/C.html
+<span class="linenr">185: </span>@ crawl
+<span class="linenr">186: </span>crawls/small-site/B.html
+<span class="linenr">187: </span>@ crawled
+<span class="linenr">188: </span>crawls/small-site/A.html
+<span class="linenr">189: </span>crawls/small-site/start.html
+<span class="linenr">190: </span>@ crawler
+<span class="linenr">191: </span>crawls/small-site/start.html
+<span class="linenr">192: </span>@ cs
+<span class="linenr">193: </span>crawls/small-site/A.html
+<span class="linenr">194: </span>@ daring
+<span class="linenr">195: </span>crawls/small-site/C.html
+<span class="linenr">196: </span>crawls/small-site/subdir/D.html
+<span class="linenr">197: </span>@ dead
+<span class="linenr">198: </span>crawls/small-site/subdir/E.html
+<span class="linenr">199: </span>@ directory
+<span class="linenr">200: </span>crawls/small-site/subdir/D.html
+<span class="linenr">201: </span>crawls/small-site/subdir/E.html
+<span class="linenr">202: </span>@ don
+<span class="linenr">203: </span>crawls/small-site/B.html
+<span class="linenr">204: </span>@ dreadful
+<span class="linenr">205: </span>crawls/small-site/subdir/D.html
+<span class="linenr">206: </span>@ end
+<span class="linenr">207: </span>crawls/small-site/subdir/E.html
+<span class="linenr">208: </span>@ exquisite
+<span class="linenr">209: </span>crawls/small-site/subdir/E.html
+<span class="linenr">210: </span>@ final
+<span class="linenr">211: </span>crawls/small-site/subdir/F.html
+<span class="linenr">212: </span>@ finally
+<span class="linenr">213: </span>crawls/small-site/start.html
+<span class="linenr">214: </span>@ graphic
+<span class="linenr">215: </span>crawls/small-site/subdir/F.html
+<span class="linenr">216: </span>@ gratuitous
+<span class="linenr">217: </span>crawls/small-site/subdir/F.html
+<span class="linenr">218: </span>@ homepage
+<span class="linenr">219: </span>crawls/small-site/A.html
+<span class="linenr">220: </span>@ keywords
+<span class="linenr">221: </span>crawls/small-site/A.html
+<span class="linenr">222: </span>crawls/small-site/B.html
+<span class="linenr">223: </span>crawls/small-site/C.html
+<span class="linenr">224: </span>crawls/small-site/subdir/D.html
+<span class="linenr">225: </span>crawls/small-site/subdir/E.html
+<span class="linenr">226: </span>crawls/small-site/subdir/F.html
+<span class="linenr">227: </span>@ link
+<span class="linenr">228: </span>crawls/small-site/A.html
+<span class="linenr">229: </span>crawls/small-site/B.html
+<span class="linenr">230: </span>crawls/small-site/start.html
+<span class="linenr">231: </span>crawls/small-site/subdir/D.html
+<span class="linenr">232: </span>crawls/small-site/subdir/E.html
+<span class="linenr">233: </span>@ links
+<span class="linenr">234: </span>crawls/small-site/start.html
+<span class="linenr">235: </span>@ original
+<span class="linenr">236: </span>crawls/small-site/start.html
+<span class="linenr">237: </span>@ page
+<span class="linenr">238: </span>crawls/small-site/A.html
+<span class="linenr">239: </span>crawls/small-site/B.html
+<span class="linenr">240: </span>crawls/small-site/C.html
+<span class="linenr">241: </span>crawls/small-site/start.html
+<span class="linenr">242: </span>crawls/small-site/subdir/D.html
+<span class="linenr">243: </span>crawls/small-site/subdir/E.html
+<span class="linenr">244: </span>crawls/small-site/subdir/F.html
+<span class="linenr">245: </span>@ pages
+<span class="linenr">246: </span>crawls/small-site/start.html
+<span class="linenr">247: </span>@ pop
+<span class="linenr">248: </span>crawls/small-site/B.html
+<span class="linenr">249: </span>@ scattered
+<span class="linenr">250: </span>crawls/small-site/start.html
+<span class="linenr">251: </span>@ site
+<span class="linenr">252: </span>crawls/small-site/start.html
+<span class="linenr">253: </span>@ start
+<span class="linenr">254: </span>crawls/small-site/B.html
+<span class="linenr">255: </span>crawls/small-site/subdir/D.html
+<span class="linenr">256: </span>crawls/small-site/subdir/E.html
+<span class="linenr">257: </span>@ starting
+<span class="linenr">258: </span>crawls/small-site/start.html
+<span class="linenr">259: </span>@ subdirectory
+<span class="linenr">260: </span>crawls/small-site/start.html
+<span class="linenr">261: </span>@ test
+<span class="linenr">262: </span>crawls/small-site/start.html
+<span class="linenr">263: </span>@ web
+<span class="linenr">264: </span>crawls/small-site/start.html
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-11-5" class="outline-3">
+<h3 id="sec-11-5"><span class="section-number-3">11.5</span> PageIndex Architecture</h3>
+<div class="outline-text-3" id="text-11-5">
+<pre class="example">public class PageIndex{
+// Index of terms found on pages and the associated pages on which
+// they were found.  An index is created empty but can use Crawler
+// that has discoverd pages to add terms and pages to the index.
+// PageIndex provides basic query facilities to look up which pages
+// contain one or more words.
+
+  protected ArraySet&lt;IndexEntry&gt; entries;
+  // The set of IndexEntries which track search terms found on pages
+  // along with the pages on which they are found.  Entries are kept
+  // in a set as they should be unique.
+
+  public PageIndex();
+  // Create an empty PageIndex
+
+  public int size();
+  // Return the number of entries in the index which is the number of
+  // terms that have been added with at least one page associated with
+  // them.
+
+  public String toString();
+  // Return a string representation of the indexed terms and
+  // pages. The format of the string is
+  //
+  // INDEX: #### entries
+  // --------------------
+  // @ entry1
+  // entry1-file1
+  // entry1-file2
+  // entry1-file3
+  // ...
+  // @ entry2
+  // entry2-file1
+  // entry2-file2
+  // entry2-file3
+  // ...
+  //
+  // Which creates a header and then iterates through all IndexEntries
+  // appending their toString().
+
+  public boolean validTerm(String term);
+  // Determine if the term given is valid. Valid terms do not appear
+  // in the sorted array Util.STOP_WORDS which are uninformative
+  // words.  Use binary search to efficiently determine if the given
+  // term is in STOP_WORDS; return false if it is and true otherwise.
+
+  public boolean containsTerm(String term);
+  // Return true if the IndexContains the given term and some pages
+  // associated with it and false otherwise.
+
+  public List&lt;String&gt; getPagesWithTerm(String term);
+  // Return a list of the pages associated with the given term. If
+  // there are no pages associated with the given term, return and
+  // empty list.
+
+  public boolean addTermAndPage(String term, String page);
+  // Add the given term found in the given page to the index.  If the
+  // term is not valid as per the validTerm() method, do not add it
+  // and return false.  Valid terms should be added along with the
+  // page on which they occurred to an IndexEntry.  Return true if the
+  // term is new to the index or if the term exists but the page is
+  // new for that term.  Otherwise return false.
+
+  public void addCrawledPages(Crawler crawler);
+  // For each page in the given crawler's foundPageList(), open and
+  // parse the page using the JSoup library.  Examine the body text of
+  // the page which is a string.  Use a Scanner on this string and set
+  // the delimiter to
+  // 
+  //    scan.useDelimiter("(\\p{Space}|\\p{Punct}|\\xA0)+");
+  // 
+  // which will parse through words on the page skipping most
+  // punctuation. Add this page to the entries in the index associated
+  // with each term in the body.
+
+  public static List&lt;String&gt; intersectionOfSorted(List&lt;String&gt; x, List&lt;String&gt; y);
+  // Find the intersection (common elements) of x and y. Assume that x
+  // and y are sorted.  Use this fact to efficiently build up a list
+  // of the common elements with a single loop through the lists x and
+  // y.
+
+  public List&lt;String&gt; query(String queryString);
+  // Return a list of pages in the index which match the given
+  // query. The query may be several space-separated words such as
+  // "robotics artificial intelligence".  These should be separated
+  // and used to retrieve lists of pages matching the words. Make use
+  // of the insertionOfSorted(x,y) method to efficiently combine lists
+  // of pages repeatedly in a loop to produce the end results.
+
+  public static void main(String args[]);
+  // Optional main method for your own testing
+
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> Setup and Submission (5%)&nbsp;&nbsp;&nbsp;<span class="tag"><span class="grading">grading</span></span></h2>
+<div class="outline-text-2" id="text-12">
+<p>
+The submission procedure is identical to previous projects. 
+</p>
+<ul class="org-ul">
+<li>Keep all project files in a directory named after the pattern
+<code>ckauffm2-205-p6</code>
+</li>
+<li>Include an <code>ID.txt</code> file with your identification details in it. 
+</li>
+<li>When finished, create a <code>.zip</code> file of your project directory 
+</li>
+<li>Verify that all your project files are in the zip
+</li>
+<li>Submit your zipped project file to Blackboard under the appropriate
+project link.
+</li>
+<li>You may submit as many times as desired; only the most recent
+submission will be graded.
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr> <i> Author: Mark Snyder and Chris Kauffman (<a href="mailto:msnyde14@gmu.edu">msnyde14@gmu.edu</a>, <a href="mailto:kauffman@cs.gmu.edu">kauffman@cs.gmu.edu</a>) <br> Date: 2017-04-24 Mon 11:47 <br> </i>
+</div>
+
+
+</body></html>
