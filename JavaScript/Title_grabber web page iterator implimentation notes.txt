@@ -1,0 +1,36 @@
+Javascript reimplimentation notes:
+
+Element path notes:
+>body
+	>ytd-app
+		>div id=contents
+			>ytd-page-manager id=page-manager
+				>ytd-browse
+					>ytd-two-column-browse-results-renderer
+						>ytd-section-list-renderer id=primary
+							>div id=contents
+								>ytd-item-section-renderer
+									>div id=contents
+										>ytd-playlist-video-list-renderer
+											>div id=contents
+												#list of all video elements loaded onto the page
+												>ytd-playlist-video-renderer #contains video information #video entry object element
+													>div id=contents
+														>a
+															>div id=meta
+																>h3
+																	><span id="video-title" class="style-scope ytd-playlist-video-renderer" aria-label="Undertale - Megalovania by Hawelo92 3 years ago 5 minutes, 14 seconds 70,444,843 views" title="Undertale - Megalovania">
+        																        Undertale - Megalovania
+            																 </span>
+										>div id=continuations
+											>yt-next-continuation
+
+Implimentation notes:
+ go to web page
+ trigger the div element with id=continuations in ytd-playlist-video-list-renderer
+   keep triggering the element till it has no daughter elements (no more elements to load into the list of videos)
+ iterate through the ytd-playlist-video-list-renderer element for the tag: ytd-playlist-video-renderer <at this point it will have all the videos in the playlist>
+   in each ytd-playlist-video-renderer element, search for the span element with the id "video-title"
+   save each video title into an array/list
+ once complete, output the amount of titles grabbed to the user/console, note how many were deleted, and how many were set to private.
+ save information to file, place playlist title, titles grabbed, num of dels and privs at top followed by several 
