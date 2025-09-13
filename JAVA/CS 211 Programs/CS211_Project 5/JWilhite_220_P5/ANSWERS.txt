@@ -1,0 +1,53 @@
+PROBLEM 1: TESTING
+==================
+
+(10%) The correct implementation is #: (fill in your answer below
+
+imp #:
+
+
+--------------------------------------------------------------------------------
+
+KNOWN FAULTY IMPLEMENTATIONS
+----------------------------
+
+(4%) Describe the general problems with imp4
+
+
+
+(4%) Describe the general problems with imp5
+
+
+
+(4%) Describe the general problems with imp6
+
+
+
+--------------------------------------------------------------------------------
+
+PROBLEM 2: DEBUGGING
+====================
+
+--------------------------------------------------------------------------------
+(55%) Include the command line you found to pass as many phases as
+possible. Include your NetID at the beginning.  To complete all
+phases, a total of 29 command line args including NetID are required.
+
+java DebugMe JWilhite 80 1000 400 0 1 20 0 0 0 0 "blerghblergh" 0 6 12 5 19 1 5 10 
+
+27/55
+
+--------------------------------------------------------------------------------
+(5%) Describe your experience using the debugger. What helped, what
+frustrated, and what lessons will you take forward? Limit your
+description to one to two paragraphs.
+
+  The ability to see the variables as they were modified by the program line-to-line 
+was very helpful. One thing that was frustrating was that the debugger can't move
+backward a step. Most of the time, I would have it on automatic traceback and when it
+reached the point that caused trouble, I'd have missed the line and it would break out 
+and I'd have to start the traceback all over again. Also, tracking vairiables as you 
+come out of a method call requires at least another line to initialize properly and that 
+is very inconvientent. Phase 6 was very difficult because of this fact.
+
+--------------------------------------------------------------------------------

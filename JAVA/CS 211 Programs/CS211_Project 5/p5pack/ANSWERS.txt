@@ -1,0 +1,47 @@
+PROBLEM 1: TESTING
+==================
+
+(10%) The correct implementation is #: (fill in your answer below
+
+imp #:
+
+
+--------------------------------------------------------------------------------
+
+KNOWN FAULTY IMPLEMENTATIONS
+----------------------------
+
+(4%) Describe the general problems with imp4
+
+
+
+(4%) Describe the general problems with imp5
+
+
+
+(4%) Describe the general problems with imp6
+
+
+
+--------------------------------------------------------------------------------
+
+PROBLEM 2: DEBUGGING
+====================
+
+--------------------------------------------------------------------------------
+(55%) Include the command line you found to pass as many phases as
+possible. Include your NetID at the beginning.  To complete all
+phases, a total of 29 command line args including NetID are required.
+
+
+
+
+
+--------------------------------------------------------------------------------
+(5%) Describe your experience using the debugger. What helped, what
+frustrated, and what lessons will you take forward? Limit your
+description to one to two paragraphs.
+
+
+
+--------------------------------------------------------------------------------
