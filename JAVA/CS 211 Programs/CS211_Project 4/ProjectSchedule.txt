@@ -1,0 +1,42 @@
+[TIME REMAINING ON PROJECT: 0]
+
+Enumerations:
+ - Signal (Week 1) <-- (COMPLETE)
+
+Interfaces:
+ - Logic (Week 1) <-- (COMPLETE)
+
+Classes:
+ - Wire (Week 1) <-- (COMPLETE)
+ - Contact (Week 1) <-- (COMPLETE)
+ - Gate @ (Week 2) <-- (COMPLETE)
+   +--GateAnd (Week 2) <-- (COMPLETE)
+   +--GateOr (Week 2) <-- (COMPLETE)
+   +--GateNot (Week 2) <-- (COMPLETE)
+   +--GateXor (Week 2) <-- (COMPLETE)
+   +--GateNand (Week 2) <-- (COMPLETE)
+   +--GateNor (Week 2) <-- (COMPLETE)
+ 
+ - GateSim (Week 2) <-- (<!>COMPLETED, BUT UNTESTED<!> TESTED LAST (PART OF OVERALLTESTS))
+ - Circuit (Week 3) <-- (INCOMPLETE, COMPILES)
+
+ - (java.lang.RuntimeException)
+   +--ExceptionLogicMalformedSignal (Week 1) <-- (COMPLETE)
+   +--ExceptionLogicParameters (Week 1) <-- (COMPLETE)
+
+WORK ORDER::
+(CIRCUIT):
+  #then these:
+   circuit_parseComponentLine_2
+
+  #This should work once the constructor works:
+   circuit_toString
+
+  #make sure to finish creating constructor before testing/changing this:
+   circuit_propagate2
+   circuit_propagate9
+
+  #these all rely on propagate working properly:
+   circuit_read8
+(GATE_SIM):
+  #complete testing on CIRCUIT before decicding how to proceed with GATE_SIM....
